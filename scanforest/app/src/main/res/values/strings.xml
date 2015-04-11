@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Scanforest</string>
+    <string name="title_activity_map">Map</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="plague">Plaga</string>
+    <string name="fire">Incendio</string>
+
+</resources>
