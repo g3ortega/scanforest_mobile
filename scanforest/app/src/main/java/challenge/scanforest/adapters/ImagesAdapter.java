@@ -1,6 +1,7 @@
 package challenge.scanforest.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,8 @@ public class ImagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
         ImageHolder vh=(ImageHolder)viewHolder;
-        //vh.mImage
+        Image  m= mImages.get(i);
+        //vh.mImage.setImageURI(Uri.fromFile());
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +24,11 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -50,11 +53,16 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
     ArrayList<Image> mImages;
     Spinner mAlertType;
     ArrayAdapter<CharSequence> mAlertAdapter;
+    ImagesAdapter mImageAdapter;
     Button pic;
+    Bitmap mbitmap;
 
     EditText mDescriptioin;
     EditText mMagnitude;
     EditText mArea;
+    ImageView viewImage;
+
+    Image image;
 
     protected LocationManager locationManager;
     protected LocationListener locationListener;
@@ -69,7 +77,7 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
 
         locationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
+        viewImage=(ImageView)findViewById(R.id.image);
 
         mAlertType = (Spinner) findViewById(R.id.alert_type);
         pic = (Button) findViewById(R.id.picture);
@@ -88,11 +96,12 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
         mAlertAdapter = ArrayAdapter.createFromResource(this,
                 R.array.alert_types, R.layout.spiner_item);
         mAlertType.setAdapter(mAlertAdapter);
-        recyclerView = (RecyclerView)findViewById(R.id.pictures);
+        /*recyclerView = (RecyclerView)findViewById(R.id.pictures);
         mImages=new ArrayList<>();
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
-        recyclerView.setAdapter(new ImagesAdapter(this,mImages));
-
+        mImages = new ArrayList<>();
+        mImageAdapter = new ImagesAdapter(this,mImages);
+        recyclerView.setAdapter(mImageAdapter);*/
     }
 
     private void selectImage() {
@@ -111,12 +120,12 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                     startActivityForResult(intent, 1);
                 }
-                else if (options[item].equals("Choose from Gallery"))
-                {
-                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, 2);
-
-                }
+//                else if (options[item].equals("Choose from Gallery"))
+//                {
+//                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                    startActivityForResult(intent, 2);
+//
+//                }
                 else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
@@ -145,7 +154,10 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
                             bitmapOptions);
 
-               //     viewImage.setImageBitmap(bitmap);
+
+                    mbitmap=bitmap;
+
+                  viewImage.setImageBitmap(bitmap);
 
 
 
@@ -156,6 +168,12 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
                     f.delete();
                     OutputStream outFile = null;
                     File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
+
+                    image = new Image();
+                    image.setName(file.getName());
+                    image.setContentType("image/jpg");
+                    image.setContent(getImageContent(bitmap));
+
                     try {
                         outFile = new FileOutputStream(file);
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
@@ -182,7 +200,13 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
                 Log.w("Path",""+ picturePath + "");
-                //viewImage.setImageBitmap(thumbnail);
+
+                /*Image image= new Image();
+                image.setPath(picturePath);
+                mImages.add(image);
+                mImageAdapter.notifyDataSetChanged();*/
+                mbitmap=thumbnail;
+                viewImage.setImageBitmap(thumbnail);
             }
         }
     }
@@ -244,8 +268,7 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
         descriptions.add(description);
         HashMap<String,String> hash=new HashMap<>();
         hash.put("description1",description.getDescription());
-
-        alert.setDescription(hash);
+        alert.setDescription("{description1:'"+description.getDescription()+"'}");
         alert.setMagnitude(TypeConverter.toInt(mMagnitude.getText().toString(), 0));
         alert.setArea(TypeConverter.toFloat(mArea.getText().toString(), 0));
         alert.setType(mAlertAdapter.getItem(mAlertType.getSelectedItemPosition()).toString());
@@ -253,7 +276,19 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
             alert.setLatitud(mLocation.getLatitude());
             alert.setLongitud(mLocation.getLongitude());
         }
+        alert.setPhoto(image);
         return alert;
+    }
+
+    private String getImageContent(Bitmap mbitmap){
+        if(mbitmap!=null){
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            mbitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            return encoded;
+        }
+        return "";
     }
 
     @Override

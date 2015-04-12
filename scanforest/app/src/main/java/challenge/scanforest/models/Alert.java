@@ -17,9 +17,12 @@ public class Alert {
     private int magnitude;
     //@SerializedName("description")
     //private ArrayList<Description> description;
+//
+//    @SerializedName("description")
+//    private HashMap<String,String> description;
 
     @SerializedName("description")
-    private HashMap<String,String> description;
+    private String description;
 
     @SerializedName("area")
     private float area;
@@ -27,6 +30,9 @@ public class Alert {
     private String created;
     @SerializedName("type")
     private String type;
+
+    @SerializedName("photo")
+    private Image photo;
 
     public double getLatitud() {
         return latitud;
@@ -84,11 +90,27 @@ public class Alert {
         this.type = type;
     }
 
-    public HashMap<String, String> getDescription() {
+//    public HashMap<String, String> getDescription() {
+//        return description;
+//    }
+//
+//    public void setDescription(HashMap<String, String> description) {
+//        this.description = description;
+//    }
+
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(HashMap<String, String> description) {
+    public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Image getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Image photo) {
+        this.photo = photo;
     }
 }

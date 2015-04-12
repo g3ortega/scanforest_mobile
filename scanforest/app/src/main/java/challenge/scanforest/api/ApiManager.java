@@ -14,8 +14,8 @@ public class ApiManager {
 
     public static RestAdapter.Builder getDefaultBuilder(){
 
-        String url="http://192.168.0.106:3000";
-        //String url="http://scanforest.ga";
+        //String url="http://192.168.0.106:3000";
+        String url="http://scanforest.ga";
 
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)

@@ -3,6 +3,7 @@ package challenge.scanforest;
 import android.app.Fragment;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -19,14 +20,20 @@ import com.google.android.gms.maps.model.*;
 import challenge.scanforest.utils.ServiceUtils;
 
 
-public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks{
+public class MainActivity extends ActionBarActivity
+        implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, LocationListener {
 
     MapFragment mapFragment;
     GoogleMap map;
+    protected LocationManager locationManager;
+    protected LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        locationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
         setContentView(R.layout.activity_main);
         mapFragment=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -79,6 +86,36 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        if(map != null){
+            LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
+            map.setMyLocationEnabled(true);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
+
+            map.addMarker(new MarkerOptions()
+                    .title("CCNN")
+                    .position(sydney));
+        }
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
 
     }
 }
