@@ -29,10 +29,20 @@
     <string name="pictures">Pictures</string>
     <string name="take_picture">Take Picture</string>
     <string name="send">Send</string>
+    <string name="alert_type">Alert Type</string>
+    <string name="description_hint">Description of the alert to Report</string>
+    <string name="alert_reported">Alert Reported</string>
+    <string name="an_error_occured">Sorry, Something went wrong</string>
 
     <string-array name="user_types">
         <item>Technitian</item>
         <item>Normal</item>
+    </string-array>
+
+    <string-array name="alert_types">
+        <item>Fire</item>
+        <item>Another</item>
+        <item>another</item>
     </string-array>
 
 </resources>

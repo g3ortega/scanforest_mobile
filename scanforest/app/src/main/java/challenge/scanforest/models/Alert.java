@@ -20,6 +20,8 @@ public class Alert {
     private float area;
     @SerializedName("created")
     private String created;
+    @SerializedName("type")
+    private String type;
 
     public double getLatitud() {
         return latitud;
@@ -67,5 +69,13 @@ public class Alert {
 
     public void setCreated(String created) {
         this.created = created;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

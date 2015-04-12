@@ -2,6 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="challenge.scanforest.ReportIncident">
-    <item android:id="@+id/action_settings" android:title="@string/send"
+    <item android:id="@+id/action_send" android:title="@string/send"
         android:orderInCategory="100" app:showAsAction="always" />
 </menu>

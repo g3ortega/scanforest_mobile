@@ -42,4 +42,12 @@ public class ApiManager {
         }
         return userService;
     }
+
+    private static AlertService alertService;
+    public static AlertService alertService(){
+        if(alertService == null){
+            alertService = new AlertService();
+        }
+        return alertService;
+    }
 }
