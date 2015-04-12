@@ -2,6 +2,7 @@
     <string name="app_name">Scanforest</string>
     <string name="title_activity_map">Map</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_report_incident">MainActivity</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -11,6 +12,19 @@
 
     <string name="plague">Plaga</string>
     <string name="fire">Incendio</string>
-    <string name="title_activity_report_incident">ReportIncident</string>
+    <string name="report_incident">ReportIncident</string>
+    <string name="title_activity_initial">InitialActivity</string>
+    <string name="userName">User Name</string>
+    <string name="Register">Register</string>
+    <string name="password">Password</string>
+    <string name="Login">Login</string>
+    <string name="Email">Email</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="confirm_password">Confirmation</string>
+
+    <string-array name="user_types">
+        <item>Technitian</item>
+        <item>Normal</item>
+    </string-array>
 
 </resources>
