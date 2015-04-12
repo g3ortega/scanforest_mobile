@@ -115,7 +115,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
-                    android:text="@string/take_picture" />
+                    android:text="@string/take_picture"
+                    android:id="@+id/picture" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

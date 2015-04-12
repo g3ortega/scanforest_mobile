@@ -45,5 +45,6 @@
         <item>Another</item>
         <item>another</item>
     </string-array>
+    <string name="title_activity_camera">CameraActivity</string>
 
 </resources>
