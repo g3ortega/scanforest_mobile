@@ -13,10 +13,14 @@ import retrofit.http.Part;
 public class ApiManager {
 
     public static RestAdapter.Builder getDefaultBuilder(){
+
+        String url="http://192.168.0.106:3000";
+        //String url="http://scanforest.ga";
+
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setRequestInterceptor(getDefaultRequestInterceptor())
-                .setEndpoint("http://192.168.0.106:3000");
+                .setEndpoint(url);
         return  builder;
     }
 
@@ -28,7 +32,7 @@ public class ApiManager {
                 request.addHeader("Accept", "application/json");
                 Session session = Session.getInstance();
                 if(!session.getToken().equals("")){
-                    request.addHeader("Authorization",session.getToken());
+                    request.addHeader("Authorization","Token token="+session.getToken());
                 }
             }
         };

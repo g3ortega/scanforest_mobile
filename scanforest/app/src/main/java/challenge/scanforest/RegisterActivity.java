@@ -106,7 +106,7 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
     public RegisterUser getUser() {
         RegisterUser user =new RegisterUser();
         user.setmUserName(edUserName.getText().toString());
-        user.setmEmail(etEmail.getText().toString());
+        //user.setmEmail(etEmail.getText().toString());
         user.setmPassword(etPassword.getText().toString());
         user.setmPasswordConfirmation(etConfirmation.getText().toString());
         user.setmType(adapter.getItem(spinner.getSelectedItemPosition()).toString());

@@ -4,6 +4,7 @@ import challenge.scanforest.api.callbacks.OnSessionCreated;
 import challenge.scanforest.models.RegisterUser;
 import challenge.scanforest.models.User;
 import challenge.scanforest.utils.CLog;
+import challenge.scanforest.utils.Credentials;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -25,11 +26,11 @@ public class UserService {
     }
 
     public void Register(RegisterUser user, final OnSessionCreated onRegister){
-        resource.register(user,new Callback<String>() {
+        resource.register(user,new Callback<Credentials>() {
             @Override
-            public void success(String token, Response response) {
-                CLog.i(TAG,token);
-                onRegister.onSuccess(token);
+            public void success(Credentials credentials, Response response) {
+                CLog.i(TAG,credentials.getToken());
+                onRegister.onSuccess(credentials.getToken());
             }
 
             @Override
@@ -41,10 +42,10 @@ public class UserService {
     }
 
     public void Login(User user, final OnSessionCreated onSessionCreated){
-        resource.Login(user,new Callback<String>() {
+        resource.Login(user,new Callback<Credentials>() {
             @Override
-            public void success(String s, Response response) {
-                onSessionCreated.onSuccess(s);
+            public void success(Credentials s, Response response) {
+                onSessionCreated.onSuccess(s.getToken());
             }
 
             @Override

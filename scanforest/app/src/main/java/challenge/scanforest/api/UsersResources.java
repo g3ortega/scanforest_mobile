@@ -2,6 +2,7 @@ package challenge.scanforest.api;
 
 import challenge.scanforest.models.RegisterUser;
 import challenge.scanforest.models.User;
+import challenge.scanforest.utils.Credentials;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -13,8 +14,8 @@ import retrofit.http.POST;
  */
 public interface UsersResources {
     @POST("/api/users")
-    void register(@Body RegisterUser user, Callback<String> cb);
+    void register(@Body RegisterUser user, Callback<Credentials> cb);
 
-    @POST("/api/session")
-    void Login(@Body User user, Callback<String> cb);
+    @POST("/api/sessions")
+    void Login(@Body User user, Callback<Credentials> cb);
 }

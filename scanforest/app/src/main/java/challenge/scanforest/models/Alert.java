@@ -3,6 +3,7 @@ package challenge.scanforest.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by gerardo on 4/12/15.
@@ -14,8 +15,12 @@ public class Alert {
     private double longitud;
     @SerializedName("magnitude")
     private int magnitude;
+    //@SerializedName("description")
+    //private ArrayList<Description> description;
+
     @SerializedName("description")
-    private ArrayList<Description> description;
+    private HashMap<String,String> description;
+
     @SerializedName("area")
     private float area;
     @SerializedName("created")
@@ -47,13 +52,13 @@ public class Alert {
         this.magnitude = magnitude;
     }
 
-    public ArrayList<Description> getDescription() {
-        return description;
-    }
-
-    public void setDescription(ArrayList<Description> description) {
-        this.description = description;
-    }
+//    public ArrayList<Description> getDescription() {
+//        return description;
+//    }
+//
+//    public void setDescription(ArrayList<Description> description) {
+//        this.description = description;
+//    }
 
     public float getArea() {
         return area;
@@ -77,5 +82,13 @@ public class Alert {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public HashMap<String, String> getDescription() {
+        return description;
+    }
+
+    public void setDescription(HashMap<String, String> description) {
+        this.description = description;
     }
 }
