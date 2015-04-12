@@ -21,6 +21,8 @@
     <string name="Email">Email</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="confirm_password">Confirmation</string>
+    <string name="required_user_login">The user Name and password are required</string>
+    <string name="user_type">User Type: </string>
 
     <string-array name="user_types">
         <item>Technitian</item>

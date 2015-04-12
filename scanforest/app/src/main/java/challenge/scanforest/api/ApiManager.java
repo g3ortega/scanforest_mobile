@@ -1,6 +1,7 @@
 package challenge.scanforest.api;
 
 import challenge.scanforest.models.User;
+import challenge.scanforest.utils.Session;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
@@ -15,7 +16,7 @@ public class ApiManager {
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setRequestInterceptor(getDefaultRequestInterceptor())
-                .setEndpoint("http://scanforest.ga");
+                .setEndpoint("http://192.168.0.106:3000");
         return  builder;
     }
 
@@ -25,6 +26,10 @@ public class ApiManager {
             public void intercept(RequestFacade request) {
                 request.addHeader("Content-Type","application/json");
                 request.addHeader("Accept", "application/json");
+                Session session = Session.getInstance();
+                if(!session.getToken().equals("")){
+                    request.addHeader("Authorization",session.getToken());
+                }
             }
         };
         return requestInterceptor;

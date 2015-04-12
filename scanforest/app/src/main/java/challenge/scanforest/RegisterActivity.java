@@ -1,5 +1,6 @@
 package challenge.scanforest;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import challenge.scanforest.api.ApiManager;
 import challenge.scanforest.api.callbacks.OnSessionCreated;
 import challenge.scanforest.models.RegisterUser;
 import challenge.scanforest.models.User;
+import challenge.scanforest.utils.Session;
 
 
 public class RegisterActivity extends ActionBarActivity implements View.OnClickListener {
@@ -41,8 +43,9 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
         api=new ApiManager();
         spinner = (Spinner) findViewById(R.id.spiner_type);
         adapter = ArrayAdapter.createFromResource(this,
-                R.array.user_types, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.user_types, R.layout.spiner_item);
+
+        adapter.setDropDownViewResource( R.layout.spiner_item);
         spinner.setAdapter(adapter);
         btnRegister = (Button)findViewById(R.id.btn_submit_register);
         btnRegister.setOnClickListener(this);
@@ -77,7 +80,9 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
                 ApiManager.userService().Register(user,new OnSessionCreated() {
                     @Override
                     public void onSuccess(String token) {
-                        Toast.makeText(getApplicationContext(),token,Toast.LENGTH_LONG).show();
+                        Session.getInstance().setToken(token);
+                        Intent intent =new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(intent);
                     }
 
                     @Override

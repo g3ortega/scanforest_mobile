@@ -12,11 +12,9 @@ import retrofit.http.POST;
  * Created by gerardo on 4/11/15.
  */
 public interface UsersResources {
-
-
-    @POST("/api/user")
+    @POST("/api/users")
     void register(@Body RegisterUser user, Callback<String> cb);
 
-    @POST("/api/user")
+    @POST("/api/session")
     void Login(@Body User user, Callback<String> cb);
 }
