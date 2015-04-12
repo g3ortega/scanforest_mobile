@@ -61,7 +61,11 @@ public class InitialActivity extends ActionBarActivity implements View.OnClickLi
         }
         if (id == R.id.btn_login) {
             User user = getUser();
-            if (isUserValid(user)) {
+            Intent intent =new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
+
+
+            /*if (isUserValid(user)) {
                 ApiManager.userService().Login(user, new OnSessionCreated() {
                     @Override
                     public void onSuccess(String token) {
@@ -75,7 +79,7 @@ public class InitialActivity extends ActionBarActivity implements View.OnClickLi
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     }
                 });
-            }
+            }*/
         }
     }
 

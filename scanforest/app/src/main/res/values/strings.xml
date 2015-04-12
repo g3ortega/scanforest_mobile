@@ -23,6 +23,12 @@
     <string name="confirm_password">Confirmation</string>
     <string name="required_user_login">The user Name and password are required</string>
     <string name="user_type">User Type: </string>
+    <string name="description">Description</string>
+    <string name="magnitude">Magnitude</string>
+    <string name="area">Area</string>
+    <string name="pictures">Pictures</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="send">Send</string>
 
     <string-array name="user_types">
         <item>Technitian</item>

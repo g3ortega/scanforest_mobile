@@ -2,16 +2,30 @@ package challenge.scanforest;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import challenge.scanforest.adapters.ImagesAdapter;
+import challenge.scanforest.models.Image;
 
 
 public class ReportIncident extends ActionBarActivity {
 
+    RecyclerView recyclerView;
+    ArrayList<Image> mImages;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_incident);
+        recyclerView = (RecyclerView)findViewById(R.id.pictures);
+        mImages=new ArrayList<>();
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setAdapter(new ImagesAdapter(this,mImages));
     }
 
 

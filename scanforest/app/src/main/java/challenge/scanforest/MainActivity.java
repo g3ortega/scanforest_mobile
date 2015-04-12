@@ -1,6 +1,7 @@
 package challenge.scanforest;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
@@ -45,10 +46,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if(id == R.id.action_report)
+        {
+            Intent intent =new Intent(getApplicationContext(),ReportIncident.class);
+            startActivity(intent);
+        }
         //noinspection SimplifiableIfStatement
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
