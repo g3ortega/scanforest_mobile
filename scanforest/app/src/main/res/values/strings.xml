@@ -11,5 +11,6 @@
 
     <string name="plague">Plaga</string>
     <string name="fire">Incendio</string>
+    <string name="title_activity_report_incident">ReportIncident</string>
 
 </resources>

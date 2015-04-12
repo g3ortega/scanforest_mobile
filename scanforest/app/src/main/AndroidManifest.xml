@@ -34,6 +34,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ReportIncident"
+            android:label="@string/title_activity_report_incident" >
+        </activity>
     </application>
 
 </manifest>
