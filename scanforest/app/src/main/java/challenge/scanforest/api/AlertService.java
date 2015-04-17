@@ -1,14 +1,15 @@
 package challenge.scanforest.api;
 
+import android.media.Image;
+
 import challenge.scanforest.api.callbacks.OnObjectSaved;
-import challenge.scanforest.api.callbacks.OnSessionCreated;
 import challenge.scanforest.models.Alert;
-import challenge.scanforest.models.RegisterUser;
-import challenge.scanforest.utils.CLog;
+import challenge.scanforest.models.AlertImage;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by gerardo on 4/12/15.
@@ -35,6 +36,20 @@ public class AlertService {
             @Override
             public void failure(RetrofitError error) {
                 onAlertSaved.onError(new BaseError());
+            }
+        });
+    }
+
+    public void SendImage(final TypedFile image, final Integer id, final OnObjectSaved<AlertImage> onImageSave){
+        resource.UploadImage(image, id ,new Callback<AlertImage>() {
+            @Override
+            public void success(AlertImage alertImage, Response response) {
+                onImageSave.onSuccess(alertImage);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                onImageSave.onError(new BaseError());
             }
         });
     }

@@ -9,6 +9,8 @@ import java.util.HashMap;
  * Created by gerardo on 4/12/15.
  */
 public class Alert {
+    @SerializedName("id")
+    private Integer id;
     @SerializedName("lat")
     private double latitud;
     @SerializedName("lon")
@@ -31,8 +33,7 @@ public class Alert {
     @SerializedName("type")
     private String type;
 
-    @SerializedName("photo")
-    private Image photo;
+
 
     public double getLatitud() {
         return latitud;
@@ -106,11 +107,11 @@ public class Alert {
         this.description = description;
     }
 
-    public Image getPhoto() {
-        return photo;
+    public Integer getId() {
+        return id;
     }
 
-    public void setPhoto(Image photo) {
-        this.photo = photo;
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

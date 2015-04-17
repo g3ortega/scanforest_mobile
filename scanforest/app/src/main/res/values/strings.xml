@@ -46,5 +46,6 @@
         <item>another</item>
     </string-array>
     <string name="title_activity_camera">CameraActivity</string>
+    <string name="image_upload_error">There was an error while uploading image</string>
 
 </resources>

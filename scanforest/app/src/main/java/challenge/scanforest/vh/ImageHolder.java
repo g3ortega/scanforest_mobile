@@ -4,8 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
-import challenge.scanforest.models.Image;
-
 /**
  * Created by gerardo on 4/12/15.
  */
