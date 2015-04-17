@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical" />-->
             <ImageView
-                android:id="@+id/image"
+                android:id="@+id/alertImage"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
         </LinearLayout>

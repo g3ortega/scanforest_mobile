@@ -1,17 +1,15 @@
 package challenge.scanforest.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import challenge.scanforest.R;
-import challenge.scanforest.models.Image;
+import challenge.scanforest.models.AlertImage;
 import challenge.scanforest.vh.ImageHolder;
 
 /**
@@ -19,10 +17,10 @@ import challenge.scanforest.vh.ImageHolder;
  */
 public class ImagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<Image> mImages;
+    ArrayList<AlertImage> mAlertImages;
 
-    public ImagesAdapter(Context context,ArrayList<Image> images){
-        mImages=images;
+    public ImagesAdapter(Context context,ArrayList<AlertImage> alertImages){
+        mAlertImages = alertImages;
     }
 
     @Override
@@ -38,12 +36,12 @@ public class ImagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
         ImageHolder vh=(ImageHolder)viewHolder;
-        Image  m= mImages.get(i);
+        AlertImage m= mAlertImages.get(i);
         //vh.mImage.setImageURI(Uri.fromFile());
     }
 
     @Override
     public int getItemCount() {
-        return mImages.size();
+        return mAlertImages.size();
     }
 }

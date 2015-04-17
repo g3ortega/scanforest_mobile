@@ -15,7 +15,6 @@ import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -42,27 +41,28 @@ import challenge.scanforest.api.ApiManager;
 import challenge.scanforest.api.BaseError;
 import challenge.scanforest.api.callbacks.OnObjectSaved;
 import challenge.scanforest.models.Alert;
+import challenge.scanforest.models.AlertImage;
 import challenge.scanforest.models.Description;
-import challenge.scanforest.models.Image;
 import challenge.scanforest.utils.TypeConverter;
+import retrofit.mime.TypedFile;
 
 
 public class ReportIncident extends ActionBarActivity implements LocationListener{
 
     RecyclerView recyclerView;
-    ArrayList<Image> mImages;
+    ArrayList<AlertImage> mAlertImages;
     Spinner mAlertType;
     ArrayAdapter<CharSequence> mAlertAdapter;
     ImagesAdapter mImageAdapter;
     Button pic;
-    Bitmap mbitmap;
+    File photo;
 
     EditText mDescriptioin;
     EditText mMagnitude;
     EditText mArea;
     ImageView viewImage;
 
-    Image image;
+    AlertImage alertImage;
 
     protected LocationManager locationManager;
     protected LocationListener locationListener;
@@ -97,10 +97,10 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
                 R.array.alert_types, R.layout.spiner_item);
         mAlertType.setAdapter(mAlertAdapter);
         /*recyclerView = (RecyclerView)findViewById(R.id.pictures);
-        mImages=new ArrayList<>();
+        mAlertImages=new ArrayList<>();
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
-        mImages = new ArrayList<>();
-        mImageAdapter = new ImagesAdapter(this,mImages);
+        mAlertImages = new ArrayList<>();
+        mImageAdapter = new ImagesAdapter(this,mAlertImages);
         recyclerView.setAdapter(mImageAdapter);*/
     }
 
@@ -154,9 +154,6 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
                             bitmapOptions);
 
-
-                    mbitmap=bitmap;
-
                   viewImage.setImageBitmap(bitmap);
 
 
@@ -168,17 +165,12 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
                     f.delete();
                     OutputStream outFile = null;
                     File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
-
-                    image = new Image();
-                    image.setName(file.getName());
-                    image.setContentType("image/jpg");
-                    image.setContent(getImageContent(bitmap));
-
                     try {
                         outFile = new FileOutputStream(file);
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
                         outFile.flush();
                         outFile.close();
+                        photo = file;
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -193,6 +185,7 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
 
                 Uri selectedImage = data.getData();
                 String[] filePath = { MediaStore.Images.Media.DATA };
+                photo = new File(filePath[0]);
                 Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
@@ -200,12 +193,6 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
                 Log.w("Path",""+ picturePath + "");
-
-                /*Image image= new Image();
-                image.setPath(picturePath);
-                mImages.add(image);
-                mImageAdapter.notifyDataSetChanged();*/
-                mbitmap=thumbnail;
                 viewImage.setImageBitmap(thumbnail);
             }
         }
@@ -232,9 +219,21 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
             if(isAlrtValid(alert)){
                 ApiManager.alertService().SendAlert(alert, new OnObjectSaved<Alert>() {
                     @Override
-                    public void onSuccess(Alert object) {
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.alert_reported), Toast.LENGTH_LONG).show();
-                        finish();
+                    public void onSuccess(Alert alert) {
+                        TypedFile alertImage = new TypedFile("image/jpg",photo);
+                        ApiManager.alertService().SendImage(alertImage, alert.getId(), new OnObjectSaved<AlertImage>() {
+                            @Override
+                            public void onSuccess(AlertImage object) {
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.alert_reported), Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(BaseError error) {
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.image_upload_error), Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        });
                     }
 
                     @Override
@@ -276,7 +275,6 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
             alert.setLatitud(mLocation.getLatitude());
             alert.setLongitud(mLocation.getLongitude());
         }
-        alert.setPhoto(image);
         return alert;
     }
 
