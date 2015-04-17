@@ -262,7 +262,7 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
 
     public Alert getAlert() {
         Alert alert=new Alert();
-        ArrayList<Description> descriptions= new ArrayList<>();
+        ArrayList<Description> descriptions= new ArrayList <>();
         Description description=new Description();
         description.setDescription(mDescriptioin.getText().toString());
         descriptions.add(description);

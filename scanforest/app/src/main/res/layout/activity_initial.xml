@@ -1,57 +1,66 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="challenge.scanforest.InitialActivity">
 
     <LinearLayout
         android:id="@+id/login_form"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
-    <TextView
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
             android:id="@+id/tv_userName"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="@string/userName"/>
+            android:text="@string/userName" />
 
-    <EditText
-        android:id="@+id/et_userName"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text="ronnie@email.com"/>
+        <EditText
+            android:id="@+id/et_userName"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="ronnie@email.com" />
+
         <TextView
             android:id="@+id/tv_password"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="@string/password"/>
+            android:text="@string/password" />
 
         <EditText
             android:id="@+id/et_password"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="123456789"/>
+            android:text="123456789" />
 
         <Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Login"/>
+            android:text="@string/Login" />
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="@string/Register" />
     </LinearLayout>
-    <Button
-        android:id="@+id/btn_register"
+
+    <ProgressBar
+        android:id="@id/progress_circular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Register"
-        android:layout_below="@+id/login_form"
-        android:layout_alignLeft="@+id/login_form"
-        android:layout_alignStart="@+id/login_form"
-        android:layout_alignRight="@+id/login_form"
-        android:layout_alignEnd="@+id/login_form"
-        android:layout_marginTop="50dp"/>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
 </RelativeLayout>

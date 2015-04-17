@@ -18,6 +18,7 @@ import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
 import challenge.scanforest.utils.ServiceUtils;
+import challenge.scanforest.utils.Session;
 
 
 public class MainActivity extends ActionBarActivity
@@ -31,12 +32,19 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        locationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
-        setContentView(R.layout.activity_main);
-        mapFragment=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if(Session.getInstance().getToken().equals("")){
+         Intent intent = new Intent(this,InitialActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        }else{
+            locationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+            setContentView(R.layout.activity_main);
+            mapFragment=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }
     }
 
 

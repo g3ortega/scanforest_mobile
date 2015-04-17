@@ -1,15 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="challenge.scanforest.ReportIncident">
-
     <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -23,7 +14,7 @@
                 android:id="@+id/et_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="top|left"
+                android:gravity="top|start"
                 android:hint="@string/description_hint"
                 android:inputType="textMultiLine"
                 android:minLines="10"
@@ -130,4 +121,3 @@
                 android:layout_height="300dp" />
         </LinearLayout>
     </ScrollView>
-</LinearLayout>

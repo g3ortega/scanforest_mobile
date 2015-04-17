@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import challenge.scanforest.api.ApiManager;
@@ -21,6 +23,9 @@ public class InitialActivity extends ActionBarActivity implements View.OnClickLi
 
     EditText etUserName;
     EditText etPassword;
+    ProgressBar progressBar;
+    LinearLayout form;
+
     private User user;
 
 
@@ -36,6 +41,8 @@ public class InitialActivity extends ActionBarActivity implements View.OnClickLi
 
         etUserName = (EditText)findViewById(R.id.et_userName);
         etPassword = (EditText)findViewById(R.id.et_password);
+        progressBar = (ProgressBar)findViewById(R.id.progress_circular);
+        form = (LinearLayout)findViewById(R.id.login_form);
     }
 
 
@@ -66,17 +73,27 @@ public class InitialActivity extends ActionBarActivity implements View.OnClickLi
 
 
             if (isUserValid(user)) {
+                progressBar.setVisibility(View.VISIBLE);
+                form.setVisibility(View.INVISIBLE);
                 ApiManager.userService().Login(user, new OnSessionCreated() {
                     @Override
                     public void onSuccess(String token) {
-                        Session.getInstance().setToken(token);
-                        Intent intent =new Intent(getApplicationContext(),MainActivity.class);
-                        startActivity(intent);
+                        if(!token.equals("")){
+                            Session.getInstance().setToken(token);
+                            Intent intent =new Intent(getApplicationContext(),MainActivity.class);
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.an_error_occured), Toast.LENGTH_LONG).show();
+                        }
+                        progressBar.setVisibility(View.INVISIBLE);
+                        form.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onError(String message) {
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        form.setVisibility(View.VISIBLE);
                     }
                 });
             }
