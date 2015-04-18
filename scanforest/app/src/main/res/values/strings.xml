@@ -36,8 +36,8 @@
     <string name="location_not_setted">The location hasn\'t been setted.</string>
 
     <string-array name="user_types">
-        <item>technician</item>
-        <item>regular</item>
+        <item>Technitian</item>
+        <item>Normal</item>
     </string-array>
 
     <string-array name="alert_types">
@@ -51,5 +51,7 @@
     <string name="first_Name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="cellphone">Cellphone</string>
+    <string name="title_activity_view_alert">ViewAlertActivity</string>
+    <string name="location">Location</string>
 
 </resources>

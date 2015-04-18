@@ -55,6 +55,14 @@
             android:name=".vh.CameraActivity"
             android:label="@string/title_activity_camera" >
         </activity>
+        <activity
+            android:name=".ViewAlertActivity"
+            android:label="@string/title_activity_view_alert"
+            android:parentActivityName=".MapActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="challenge.scanforest.MapActivity" />
+        </activity>
     </application>
 
 </manifest>

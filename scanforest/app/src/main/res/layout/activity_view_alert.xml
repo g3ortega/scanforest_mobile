@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="challenge.scanforest.ViewAlertActivity">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/alert_image"
+        android:background="@color/image_background_color"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:name="com.google.android.gms.maps.MapFragment"/>
+            <!--<View-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@android:color/darker_gray"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                <!--android:text="@string/location"-->
+                <!--android:id="@+id/tv_location_label" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="8dp"-->
+                <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+                <!--android:text="location Text"-->
+                <!--android:id="@+id/tv_location" />-->
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/description"
+                android:id="@+id/tv_description_label" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/tv_description" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/magnitude"
+                android:id="@+id/tv_magnitude_label" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/tv_magnitude" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/area"
+                android:id="@+id/tv_area_label" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/tv_area" />
+         </LinearLayout>
+    </ScrollView>
+</LinearLayout>
