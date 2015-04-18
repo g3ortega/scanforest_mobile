@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -158,7 +160,8 @@ public class ReportIncident extends ActionBarActivity {
 
                     bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),
                             bitmapOptions);
-                    viewImage.setImageBitmap(bitmap);
+                    //viewImage.setImageBitmap(bitmap);
+                    Picasso.with(getApplicationContext()).load(photo).into(viewImage);
                     photo=file;
 
                 } catch (Exception e) {
@@ -176,7 +179,9 @@ public class ReportIncident extends ActionBarActivity {
                 photo=new File(picturePath);
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
                 Log.w("Path", "" + picturePath + "");
-                viewImage.setImageBitmap(thumbnail);
+                Picasso.with(getApplicationContext())
+                        .load(photo)
+                        .into(viewImage);
             }
         }
     }
@@ -198,7 +203,7 @@ public class ReportIncident extends ActionBarActivity {
                 ApiManager.alertService().SendAlert(alert, new OnObjectSaved<Alert>() {
                     @Override
                     public void onSuccess(Alert alert) {
-                        TypedFile alertImage = new TypedFile("application/octet-stream", photo);
+                        TypedFile alertImage = new TypedFile("multipart/form-data", photo);
                         ApiManager.alertService().SendImage(alertImage, alert.getId(), new OnObjectSaved<AlertImage>() {
                             @Override
                             public void onSuccess(AlertImage object) {

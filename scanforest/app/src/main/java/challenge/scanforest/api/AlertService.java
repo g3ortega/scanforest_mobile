@@ -44,7 +44,11 @@ public class AlertService {
     }
 
     public void SendImage(final TypedFile image, final Integer id, final OnObjectSaved<AlertImage> onImageSave){
-        resource.UploadImage(image, id ,new Callback<AlertImage>() {
+
+        RestAdapter.Builder localBuilder = ApiManager.getImageBuilder();
+        IncidentsResource localResouce=localBuilder.build().create(IncidentsResource.class);
+
+        localResouce.UploadImage(image, id ,new Callback<AlertImage>() {
             @Override
             public void success(AlertImage alertImage, Response response) {
                 onImageSave.onSuccess(alertImage);

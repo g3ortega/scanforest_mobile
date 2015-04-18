@@ -22,12 +22,18 @@ import challenge.scanforest.utils.Session;
 public class RegisterActivity extends ActionBarActivity implements View.OnClickListener {
 
     Button btnRegister;
-    EditText edUserName;
     EditText etEmail;
     EditText etPassword;
     EditText etConfirmation;
+    EditText etFirstName;
+    EditText etLastName;
+    EditText etCellphone;
+
+
     Spinner spinner;
     ArrayAdapter<CharSequence> adapter;
+
+
 
 
     ApiManager api;
@@ -49,10 +55,12 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
         spinner.setAdapter(adapter);
         btnRegister = (Button)findViewById(R.id.btn_submit_register);
         btnRegister.setOnClickListener(this);
-        edUserName = (EditText)findViewById(R.id.et_userName);
+        etFirstName =(EditText)findViewById(R.id.et_first_name);
+        etLastName =(EditText)findViewById(R.id.et_last_Name);
         etEmail = (EditText)findViewById(R.id.et_email);
         etPassword= (EditText)findViewById(R.id.et_password);
         etConfirmation = (EditText)findViewById(R.id.et_confirm_password);
+        etCellphone =(EditText)findViewById(R.id.et_cellphone);
     }
 
 
@@ -105,11 +113,13 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
 
     public RegisterUser getUser() {
         RegisterUser user =new RegisterUser();
-        user.setmUserName(edUserName.getText().toString());
-        //user.setmEmail(etEmail.getText().toString());
+        user.setFirstName(etFirstName.getText().toString());
+        user.setLastName(etLastName.getText().toString());
+        user.setmUserName(etEmail.getText().toString());
         user.setmPassword(etPassword.getText().toString());
         user.setmPasswordConfirmation(etConfirmation.getText().toString());
         user.setmType(adapter.getItem(spinner.getSelectedItemPosition()).toString());
+        user.setCelphone(etCellphone.getText().toString());
         return  user;
     }
 }

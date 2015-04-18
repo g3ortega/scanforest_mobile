@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 public class RegisterUser extends User {
     @SerializedName("password_confirmation")
     private String mPasswordConfirmation;
-    @SerializedName("type")
+    @SerializedName("role")
     private String mType;
     @SerializedName("first_name")
     private String firstName;

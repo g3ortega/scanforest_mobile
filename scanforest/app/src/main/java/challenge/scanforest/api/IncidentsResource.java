@@ -11,6 +11,7 @@ import challenge.scanforest.models.User;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -22,10 +23,9 @@ import retrofit.mime.TypedFile;
  * Created by gerardo on 4/12/15.
  */
 public interface IncidentsResource {
-
     @Multipart
-    @PUT("/api/alerts/{alert_id}/images")
-    void UploadImage(@Part("photo") TypedFile photo, @Path("alert_id") Integer alertId, Callback<AlertImage> cb);
+    @POST("/api/alerts/{alert_id}/images")
+    void UploadImage(@Part("alert_image") TypedFile photo, @Path("alert_id") Integer alertId, Callback<AlertImage> cb);
 
     @POST("/api/alerts")
     void SendAlert(@Body Alert alert, Callback<Alert> cb);
