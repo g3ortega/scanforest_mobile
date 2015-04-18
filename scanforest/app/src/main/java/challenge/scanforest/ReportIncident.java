@@ -6,34 +6,32 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import challenge.scanforest.adapters.ImagesAdapter;
@@ -43,11 +41,12 @@ import challenge.scanforest.api.callbacks.OnObjectSaved;
 import challenge.scanforest.models.Alert;
 import challenge.scanforest.models.AlertImage;
 import challenge.scanforest.models.Description;
+import challenge.scanforest.utils.GPSTracker;
 import challenge.scanforest.utils.TypeConverter;
 import retrofit.mime.TypedFile;
 
 
-public class ReportIncident extends ActionBarActivity implements LocationListener{
+public class ReportIncident extends ActionBarActivity {
 
     RecyclerView recyclerView;
     ArrayList<AlertImage> mAlertImages;
@@ -64,20 +63,28 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
 
     AlertImage alertImage;
 
-    protected LocationManager locationManager;
-    protected LocationListener locationListener;
+    GPSTracker gps;
+    Location mLocation;
+    String mCurrentPhotoPath;
 
-    protected Location mLocation;
+    private static final int CAMERA_KEY = 1;
+    private static final int GALLERY_KEY = 2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_incident);
 
+        gps = new GPSTracker(this);
 
-        locationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        viewImage=(ImageView)findViewById(R.id.image);
+        if (gps.canGetLocation()) {
+            mLocation = gps.getLocation();
+        } else {
+            gps.showSettingsAlert();
+        }
+
+        viewImage = (ImageView) findViewById(R.id.alertImage);
 
         mAlertType = (Spinner) findViewById(R.id.alert_type);
         pic = (Button) findViewById(R.id.picture);
@@ -106,27 +113,31 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
 
     private void selectImage() {
 
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(ReportIncident.this);
         builder.setTitle("Add Photo!");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo"))
-                {
+                if (options[item].equals(options[0])) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                    startActivityForResult(intent, 1);
-                }
-//                else if (options[item].equals("Choose from Gallery"))
-//                {
-//                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                    startActivityForResult(intent, 2);
-//
-//                }
-                else if (options[item].equals("Cancel")) {
+                    File f = null;
+                    try {
+                        f = createImageFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if(f!=null){
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                        startActivityForResult(intent, CAMERA_KEY);
+                    }
+
+                } else if (options[item].equals(options[1])) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, GALLERY_KEY);
+
+                } else if (options[item].equals(options[2])) {
                     dialog.dismiss();
                 }
             }
@@ -139,65 +150,36 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
 
-            if (requestCode == 1) {
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
-                        break;
-                    }
-                }
+            if (requestCode == CAMERA_KEY) {
                 try {
+                    File file = new File(mCurrentPhotoPath);
                     Bitmap bitmap;
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
 
-                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
+                    bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),
                             bitmapOptions);
+                    viewImage.setImageBitmap(bitmap);
+                    photo=file;
 
-                  viewImage.setImageBitmap(bitmap);
-
-
-
-                    String path = android.os.Environment
-                            .getExternalStorageDirectory()
-                            + File.separator
-                            + "Phoenix" + File.separator + "default";
-                    f.delete();
-                    OutputStream outFile = null;
-                    File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
-                    try {
-                        outFile = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
-                        outFile.flush();
-                        outFile.close();
-                        photo = file;
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else if (requestCode == 2) {
+            } else if (requestCode == GALLERY_KEY) {
 
                 Uri selectedImage = data.getData();
-                String[] filePath = { MediaStore.Images.Media.DATA };
-                photo = new File(filePath[0]);
-                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
+                String[] filePath = {MediaStore.Images.Media.DATA};
+                Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
                 c.close();
+                photo=new File(picturePath);
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                Log.w("Path",""+ picturePath + "");
+                Log.w("Path", "" + picturePath + "");
                 viewImage.setImageBitmap(thumbnail);
             }
         }
     }
-
 
 
     @Override
@@ -209,18 +191,14 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if(id == R.id.action_send)
-        {
-            Alert alert =getAlert();
-            if(isAlrtValid(alert)){
+        if (id == R.id.action_send) {
+            Alert alert = getAlert();
+            if (isAlertValid(alert)) {
                 ApiManager.alertService().SendAlert(alert, new OnObjectSaved<Alert>() {
                     @Override
                     public void onSuccess(Alert alert) {
-                        TypedFile alertImage = new TypedFile("image/jpg",photo);
+                        TypedFile alertImage = new TypedFile("application/octet-stream", photo);
                         ApiManager.alertService().SendImage(alertImage, alert.getId(), new OnObjectSaved<AlertImage>() {
                             @Override
                             public void onSuccess(AlertImage object) {
@@ -246,66 +224,52 @@ public class ReportIncident extends ActionBarActivity implements LocationListene
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isAlrtValid(Alert alert) {
-        if(alert ==null){
+    private boolean isAlertValid(Alert alert) {
+        if (alert == null) {
             return false;
-        }else{
-            if(alert.getLatitud()==0 && alert.getLongitud()==0){
+        } else {
+            if (alert.getLatitud() == 0 && alert.getLongitud() == 0) {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.location_not_setted), Toast.LENGTH_LONG).show();
                 return false;
-            }else{
+            } else {
                 return true;
             }
         }
     }
 
     public Alert getAlert() {
-        Alert alert=new Alert();
-        ArrayList<Description> descriptions= new ArrayList <>();
-        Description description=new Description();
+        Alert alert = new Alert();
+        ArrayList<Description> descriptions = new ArrayList<>();
+        Description description = new Description();
         description.setDescription(mDescriptioin.getText().toString());
         descriptions.add(description);
-        HashMap<String,String> hash=new HashMap<>();
-        hash.put("description1",description.getDescription());
-        alert.setDescription("{description1:'"+description.getDescription()+"'}");
+        HashMap<String, String> hash = new HashMap<>();
+        hash.put("description1", description.getDescription());
+        alert.setDescription("{description1:'" + description.getDescription() + "'}");
         alert.setMagnitude(TypeConverter.toInt(mMagnitude.getText().toString(), 0));
         alert.setArea(TypeConverter.toFloat(mArea.getText().toString(), 0));
         alert.setType(mAlertAdapter.getItem(mAlertType.getSelectedItemPosition()).toString());
-        if(mLocation!=null){
+        if (mLocation != null) {
             alert.setLatitud(mLocation.getLatitude());
             alert.setLongitud(mLocation.getLongitude());
         }
         return alert;
     }
 
-    private String getImageContent(Bitmap mbitmap){
-        if(mbitmap!=null){
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            mbitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            return encoded;
-        }
-        return "";
-    }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
 
-    @Override
-    public void onLocationChanged(Location location) {
-        mLocation = location;
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath =image.getAbsolutePath();
+        return image;
     }
 }

@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -6,19 +6,40 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="challenge.scanforest.RegisterActivity"
     android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-   <!-- <TextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/userName"
-        android:id="@+id/tv_userName"
-        />
+        android:text="@string/Email"
+        android:id="@+id/tv_first_name" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/et_userName" />-->
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/et_first_name" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/Email"
+        android:id="@+id/tv_last_name" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/et_last_Name" />
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -93,5 +114,8 @@
         android:layout_height="wrap_content"
         android:text="@string/Register"
         />
-
 </LinearLayout>
+    <ContentLoadingProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

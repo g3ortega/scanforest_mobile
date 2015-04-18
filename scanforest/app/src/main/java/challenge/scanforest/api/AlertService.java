@@ -2,6 +2,9 @@ package challenge.scanforest.api;
 
 import android.media.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import challenge.scanforest.api.callbacks.OnObjectSaved;
 import challenge.scanforest.models.Alert;
 import challenge.scanforest.models.AlertImage;
@@ -27,10 +30,10 @@ public class AlertService {
     }
 
     public void SendAlert(final Alert alert, final OnObjectSaved<Alert> onAlertSaved){
-        resource.SendAlert(alert,new Callback<String>() {
+        resource.SendAlert(alert,new Callback<Alert>() {
             @Override
-            public void success(String s, Response response) {
-                onAlertSaved.onSuccess(alert);
+            public void success(Alert rAlert, Response response) {
+                onAlertSaved.onSuccess(rAlert);
             }
 
             @Override
@@ -52,5 +55,20 @@ public class AlertService {
                 onImageSave.onError(new BaseError());
             }
         });
+    }
+
+    public void getAlerts( final OnObjectSaved<ArrayList<Alert>> onObjectSaved){
+        resource.getAlerts(new Callback<ArrayList<Alert>>(){
+            @Override
+            public void success(ArrayList<Alert> alerts, Response response) {
+                onObjectSaved.onSuccess(alerts);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                onObjectSaved.onError(new BaseError());
+            }
+        });
+
     }
 }

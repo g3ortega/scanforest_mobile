@@ -2,11 +2,15 @@ package challenge.scanforest.api;
 
 import android.media.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import challenge.scanforest.models.Alert;
 import challenge.scanforest.models.AlertImage;
 import challenge.scanforest.models.User;
 import retrofit.Callback;
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -24,5 +28,8 @@ public interface IncidentsResource {
     void UploadImage(@Part("photo") TypedFile photo, @Path("alert_id") Integer alertId, Callback<AlertImage> cb);
 
     @POST("/api/alerts")
-    void SendAlert(@Body Alert alert, Callback<String> cb);
+    void SendAlert(@Body Alert alert, Callback<Alert> cb);
+
+    @GET("/api/alerts")
+    void getAlerts( Callback<ArrayList<Alert>> cb);
 }

@@ -23,14 +23,14 @@ public class Alert {
 //    @SerializedName("description")
 //    private HashMap<String,String> description;
 
-    @SerializedName("description")
+    @SerializedName("descriptionf")
     private String description;
 
     @SerializedName("area")
     private float area;
     @SerializedName("created")
     private String created;
-    @SerializedName("type")
+    @SerializedName("alert_type")
     private String type;
 
 

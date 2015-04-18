@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,17 +18,30 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import challenge.scanforest.api.ApiManager;
+import challenge.scanforest.api.BaseError;
+import challenge.scanforest.api.callbacks.OnObjectSaved;
+import challenge.scanforest.models.Alert;
+import challenge.scanforest.utils.GPSTracker;
 import challenge.scanforest.utils.ServiceUtils;
 import challenge.scanforest.utils.Session;
 
 
 public class MainActivity extends ActionBarActivity
-        implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, LocationListener {
+        implements OnMapReadyCallback{
 
     MapFragment mapFragment;
-    GoogleMap map;
-    protected LocationManager locationManager;
-    protected LocationListener locationListener;
+    GoogleMap mGoogleMap;
+    GPSTracker tracker;
+    ArrayList<Alert> alerts;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,92 +52,80 @@ public class MainActivity extends ActionBarActivity
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
         }else{
-            locationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
             setContentView(R.layout.activity_main);
             mapFragment=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
+            ApiManager.alertService().getAlerts(new OnObjectSaved<ArrayList<Alert>>(){
+                @Override
+                public void onSuccess(ArrayList<Alert> object) {
+                    alerts=object;
+                    showAlertsInMap();
+                }
+
+                @Override
+                public void onError(BaseError error) {
+
+                }
+            });
+            tracker=new GPSTracker(this);
+        }
+    }
+
+    private void showAlertsInMap() {
+        if(mGoogleMap!=null && alerts !=null){
+            for(int i=0;i<alerts.size();i++){
+                Alert alert =alerts.get(i);
+                LatLng alertLocation = new LatLng(alert.getLatitud(),alert.getLongitud());
+                mGoogleMap.addMarker(new MarkerOptions()
+                        .title(alert.getType())
+                        .position(alertLocation));
+            }
         }
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if(id == R.id.action_report)
         {
             Intent intent =new Intent(getApplicationContext(),ReportIncident.class);
             startActivity(intent);
+        }else if(id ==R.id.log_out){
+            Session.getInstance().setToken("");
+            Intent intent = new Intent(this,InitialActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        }else if(id==R.id.settings){
         }
-        //noinspection SimplifiableIfStatement
 
         return true;
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
-        Location location = new ServiceUtils().getLocation();
-        if(location != null){
-            LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-            map.setMyLocationEnabled(true);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-
-            /*map.addMarker(new MarkerOptions()
-                    .title("Sydney")
-                    .snippet("The most populous city in Australia.")
-                    .position(sydney));*/
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-        if(map != null){
-            LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-            map.setMyLocationEnabled(true);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
+        mGoogleMap=map;
+        Location location;
+        if(tracker.canGetLocation()){
+            location = tracker.getLocation();
+            if(location != null){
+                LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                map.setMyLocationEnabled(true);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 13));
 
             map.addMarker(new MarkerOptions()
-                    .title("CCNN")
-                    .position(sydney));
+                    .title("I am here")
+                    .position(myPosition));
+            }
         }
-
+        showAlertsInMap();
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
 }

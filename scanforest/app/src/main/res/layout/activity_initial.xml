@@ -10,30 +10,34 @@
 
     <LinearLayout
         android:id="@+id/login_form"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:focusable="false">
 
         <TextView
             android:id="@+id/tv_userName"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/userName" />
+            android:text="@string/Email"
+            android:textSize="@dimen/labe_text_size" />
 
         <EditText
             android:id="@+id/et_userName"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="ronnie@email.com" />
+            android:text="rayogustavo@gmail.com" />
 
         <TextView
             android:id="@+id/tv_password"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/password" />
+            android:text="@string/password"
+            android:textSize="@dimen/labe_text_size"
+            android:layout_marginTop="20dp" />
 
         <EditText
             android:id="@+id/et_password"
@@ -45,14 +49,19 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Login" />
+            android:text="@string/Login"
+            android:background="@color/secundaryColor"
+            android:textColor="@color/primaryTextColor"
+            android:layout_marginTop="20dp" />
 
         <Button
             android:id="@+id/btn_register"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:text="@string/Register" />
+            android:text="@string/Register"
+            android:background="@color/secundaryColor"
+            android:textColor="@color/primaryTextColor" />
     </LinearLayout>
 
     <ProgressBar
