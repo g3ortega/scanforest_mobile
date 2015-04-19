@@ -123,17 +123,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.3"
                     android:text="@string/user_type"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                <Spinner
-                    android:id="@+id/spiner_type"
+                <RadioGroup
+                    android:id="@+id/rg_role"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
+                    android:layout_weight="0.7"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                    <RadioButton
+                        android:id="@+id/rb_technician"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:text="@string/technician"
+                        />
+                    <RadioButton
+                        android:id="@+id/rb_normal"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:text="@string/normal"
+                        />
+                    </RadioGroup>
             </LinearLayout>
 
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -28,11 +29,9 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
     EditText etFirstName;
     EditText etLastName;
     EditText etCellphone;
-
-
-    Spinner spinner;
-    ArrayAdapter<CharSequence> adapter;
-
+    RadioGroup rgRole;
+    public static final int SIGN_UP=100;
+    public static final String REASON="REASON";
 
 
 
@@ -47,12 +46,7 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
 
     private void init() {
         api=new ApiManager();
-        spinner = (Spinner) findViewById(R.id.spiner_type);
-        adapter = ArrayAdapter.createFromResource(this,
-                R.array.user_types, R.layout.spiner_item);
-
-        adapter.setDropDownViewResource( R.layout.spiner_item);
-        spinner.setAdapter(adapter);
+        rgRole = (RadioGroup) findViewById(R.id.rg_role);
         btnRegister = (Button)findViewById(R.id.btn_submit_register);
         btnRegister.setOnClickListener(this);
         etFirstName =(EditText)findViewById(R.id.et_first_name);
@@ -64,11 +58,6 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_register, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -118,8 +107,19 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
         user.setmUserName(etEmail.getText().toString());
         user.setmPassword(etPassword.getText().toString());
         user.setmPasswordConfirmation(etConfirmation.getText().toString());
-        user.setmType(adapter.getItem(spinner.getSelectedItemPosition()).toString());
+        user.setmType(getRole(rgRole.getCheckedRadioButtonId()));
         user.setCelphone(etCellphone.getText().toString());
         return  user;
+    }
+
+    public String getRole(int id){
+        switch (id) {
+            case R.id.rb_technician:
+                return "technician";
+            case R.id.rb_normal:
+                return "normal";
+            default:
+                return null;
+        }
     }
 }

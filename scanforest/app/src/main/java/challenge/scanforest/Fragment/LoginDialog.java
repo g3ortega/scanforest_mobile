@@ -2,7 +2,6 @@ package challenge.scanforest.Fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import challenge.scanforest.R;
-import challenge.scanforest.RegisterActivity;
 import challenge.scanforest.api.ApiManager;
 import challenge.scanforest.api.callbacks.OnSessionCreated;
 import challenge.scanforest.models.User;
@@ -38,6 +36,7 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
 
     public interface LoginDialogListener {
         public void onPositiveLogin(DialogFragment dialog);
+
         public void onRegisterRequest(DialogFragment dialog);
     }
 
@@ -51,18 +50,18 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.activity_signin, null);
 
-        Button btnRegister=(Button)view.findViewById(R.id.btn_register);
+        Button btnRegister = (Button) view.findViewById(R.id.btn_register);
         btnRegister.setOnClickListener(this);
-        Button btnLogin=(Button)view.findViewById(R.id.btn_login);
+        Button btnLogin = (Button) view.findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
 
-        Button cancel= (Button)view.findViewById(R.id.btn_cancel);
+        Button cancel = (Button) view.findViewById(R.id.btn_cancel);
         cancel.setOnClickListener(this);
 
-        etUserName = (EditText)view.findViewById(R.id.et_userName);
-        etPassword = (EditText)view.findViewById(R.id.et_password);
-        progressBar = (ProgressBar)view.findViewById(R.id.progress_circular);
-        form = (LinearLayout)view.findViewById(R.id.login_form);
+        etUserName = (EditText) view.findViewById(R.id.et_userName);
+        etPassword = (EditText) view.findViewById(R.id.et_password);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_circular);
+        form = (LinearLayout) view.findViewById(R.id.login_form);
         dialog.setContentView(view);
 
         return dialog;
@@ -70,8 +69,7 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_signin,container);
-
+        View view = inflater.inflate(R.layout.activity_signin, container);
 
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -90,22 +88,22 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
     }
 
     private boolean isUserValid(User user) {
-        if(user.getmUserName().equals("") || user.getmPassword().equals("")){
+        if (user.getmUserName().equals("") || user.getmPassword().equals("")) {
             Toast.makeText(getActivity(), getResources().getString(R.string.required_user_login), Toast.LENGTH_LONG).show();
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
     public User getUser() {
-        User user=new User();
+        User user = new User();
         user.setmUserName(etUserName.getText().toString());
         user.setmPassword(etPassword.getText().toString());
         return user;
     }
 
-    public void SignIn(){
+    public void SignIn() {
         User user = getUser();
         if (isUserValid(user)) {
             progressBar.setVisibility(View.VISIBLE);
@@ -113,11 +111,11 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
             ApiManager.userService().Login(user, new OnSessionCreated() {
                 @Override
                 public void onSuccess(String token) {
-                    if(!token.equals("")){
+                    if (!token.equals("")) {
                         Session.getInstance().setToken(token);
                         mListener.onPositiveLogin(LoginDialog.this);
                         getDialog().dismiss();
-                    }else{
+                    } else {
                         Toast.makeText(getActivity(), getResources().getString(R.string.an_error_occured), Toast.LENGTH_LONG).show();
                     }
                     progressBar.setVisibility(View.INVISIBLE);
@@ -144,7 +142,7 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
         if (id == R.id.btn_login) {
             SignIn();
         }
-        if(id == R.id.btn_cancel){
+        if (id == R.id.btn_cancel) {
             getDialog().dismiss();
         }
     }

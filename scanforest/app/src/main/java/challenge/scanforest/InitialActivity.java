@@ -68,10 +68,6 @@ public class InitialActivity extends ActionBarActivity implements View.OnClickLi
         }
         if (id == R.id.btn_login) {
             User user = getUser();
-            /*Intent intent =new Intent(getApplicationContext(),MainActivity.class);
-            startActivity(intent);*/
-
-
             if (isUserValid(user)) {
                 progressBar.setVisibility(View.VISIBLE);
                 form.setVisibility(View.INVISIBLE);

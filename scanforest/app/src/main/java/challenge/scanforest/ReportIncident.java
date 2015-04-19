@@ -78,6 +78,7 @@ public class ReportIncident extends ActionBarActivity {
     private static final String ALERT_TYPE = "ALERT_TYPE";
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

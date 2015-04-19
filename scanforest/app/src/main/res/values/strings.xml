@@ -61,5 +61,7 @@
     <string name="moderate_severe">Moderately Severe</string>
     <string name="signin">Sign In</string>
     <string name="cancel">Cancel</string>
+    <string name="technician">Technician</string>
+    <string name="normal">Normal</string>
 
 </resources>

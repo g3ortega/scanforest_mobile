@@ -148,6 +148,12 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == RegisterActivity.SIGN_UP) {
+            String result = data.getStringExtra(RegisterActivity.REASON);
+            if(result!=null && result=="SEND"){
+                showAlertForm(selectedType);
+            }
+        }
     }
 
     @Override
@@ -158,6 +164,8 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onRegisterRequest(DialogFragment dialog) {
         Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra(RegisterActivity.REASON,"SEND");
+        startActivityForResult(intent, RegisterActivity.SIGN_UP);
         startActivity(intent);
     }
 

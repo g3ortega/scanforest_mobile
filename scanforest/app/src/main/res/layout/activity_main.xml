@@ -36,6 +36,7 @@
             fab:fab_colorNormal="@color/lightPrimary"
             fab:fab_title="Fire"
             fab:fab_colorPressed="@color/lightSecundary"
+            fab:fab_icon="@drawable/ic_fire"
             />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -44,6 +45,7 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/lightPrimary"
             fab:fab_title="Logging"
+            fab:fab_icon="@drawable/ic_logging"
             fab:fab_colorPressed="@color/lightSecundary"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -52,22 +54,9 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/lightPrimary"
             fab:fab_title="Pest"
-            fab:fab_colorPressed="@color/lightSecundary"/>
+            fab:fab_colorPressed="@color/lightSecundary"
+            fab:fab_icon="@drawable/ic_pest"
+            />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-<!--    <com.getbase.floatingactionbutton.AddFloatingActionButton
-        android:id="@+id/add_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        fab:title="@string/fire"
-        fab:fab_colorNormal="@color/secundaryColor"
-        fab:fab_colorPressed="@color/primaryColor"
-        />-->
-
 </RelativeLayout>
