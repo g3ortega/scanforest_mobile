@@ -1,5 +1,6 @@
 package challenge.scanforest;
 
+import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -14,6 +15,7 @@ import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,7 +38,11 @@ public class ViewAlertActivity extends ActionBarActivity implements OnMapReadyCa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_alert);
+        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_view_alert_landscape);
+        }else{
+            setContentView(R.layout.activity_view_alert);
+        }
         mAlertImage = (ImageView) findViewById(R.id.alert_image);
 //        mLocation = (TextView) findViewById(R.id.tv_location);
         mDescription = (TextView) findViewById(R.id.tv_description);
@@ -57,7 +63,8 @@ public class ViewAlertActivity extends ActionBarActivity implements OnMapReadyCa
         mArea.setText(String.valueOf(alert.getArea()));
         mMagnitude.setText(String.valueOf(alert.getMagnitude()));
 
-
+        Picasso.with(this).load("http://demo_files/image2.jpg")
+                .placeholder(R.mipmap.ic_launcher).into(mAlertImage);
 
 
 //        Geocoder gcd = new Geocoder(this, Locale.getDefault());

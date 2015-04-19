@@ -160,9 +160,10 @@ public class ReportIncident extends ActionBarActivity {
 
                     bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),
                             bitmapOptions);
-                    //viewImage.setImageBitmap(bitmap);
-                    Picasso.with(getApplicationContext()).load(photo).into(viewImage);
                     photo=file;
+                    //viewImage.setImageBitmap(bitmap);
+                    Picasso.with(getApplicationContext()).load(photo).resize(200, 200).into(viewImage);
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -181,6 +182,7 @@ public class ReportIncident extends ActionBarActivity {
                 Log.w("Path", "" + picturePath + "");
                 Picasso.with(getApplicationContext())
                         .load(photo)
+                        .resize(200, 200)
                         .into(viewImage);
             }
         }
@@ -203,7 +205,7 @@ public class ReportIncident extends ActionBarActivity {
                 ApiManager.alertService().SendAlert(alert, new OnObjectSaved<Alert>() {
                     @Override
                     public void onSuccess(Alert alert) {
-                        TypedFile alertImage = new TypedFile("multipart/form-data", photo);
+                        TypedFile alertImage = new TypedFile("image/jpg", photo);
                         ApiManager.alertService().SendImage(alertImage, alert.getId(), new OnObjectSaved<AlertImage>() {
                             @Override
                             public void onSuccess(AlertImage object) {

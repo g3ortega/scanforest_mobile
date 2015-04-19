@@ -32,8 +32,6 @@ public class InitialActivity extends ActionBarActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Intent intent =new Intent(getApplicationContext(),ViewAlertActivity.class);
-//        startActivity(intent);
         setContentView(R.layout.activity_initial);
         Button btnRegister=(Button)findViewById(R.id.btn_register);
         btnRegister.setOnClickListener(this);
@@ -82,7 +80,7 @@ public class InitialActivity extends ActionBarActivity implements View.OnClickLi
                     public void onSuccess(String token) {
                         if(!token.equals("")){
                             Session.getInstance().setToken(token);
-                            Intent intent =new Intent(getApplicationContext(),ViewAlertActivity.class);
+                            Intent intent =new Intent(getApplicationContext(),MainActivity.class);
                             startActivity(intent);
                         }else{
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.an_error_occured), Toast.LENGTH_LONG).show();
