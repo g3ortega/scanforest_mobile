@@ -6,6 +6,15 @@
     </style>
     <color name="primaryColor">#1a2a10</color>
     <color name="secundaryColor">#6d9654</color>
+
+    <color name="lightPrimary">#ff38c364</color>
+    <color name="lightSecundary">#ff08ff66</color>
+
     <color name="primaryTextColor">#FFF</color>
     <color name="secundaryTextColor">#AAA</color>
+    <style name="menu_labels_style">
+        <item name="android:textColor">#000</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+    <color name="white">#FFF</color>
 </resources>

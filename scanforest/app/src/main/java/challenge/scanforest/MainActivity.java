@@ -10,7 +10,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.getbase.floatingactionbutton.AddFloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.MapFragment;
@@ -35,7 +38,7 @@ import challenge.scanforest.utils.Session;
 
 
 public class MainActivity extends ActionBarActivity
-        implements OnMapReadyCallback{
+        implements OnMapReadyCallback, View.OnClickListener {
 
     MapFragment mapFragment;
     GoogleMap mGoogleMap;
@@ -46,29 +49,38 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mapFragment=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
-        if(Session.getInstance().getToken().equals("")){
-         Intent intent = new Intent(this,InitialActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
-        }else{
-            setContentView(R.layout.activity_main);
-            mapFragment=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-            ApiManager.alertService().getAlerts(new OnObjectSaved<ArrayList<Alert>>(){
-                @Override
-                public void onSuccess(ArrayList<Alert> object) {
-                    alerts=object;
-                    showAlertsInMap();
-                }
+        registerFloatingButtons();
 
-                @Override
-                public void onError(BaseError error) {
 
-                }
-            });
-            tracker=new GPSTracker(this);
-        }
+
+        ApiManager.alertService().getAlerts(new OnObjectSaved<ArrayList<Alert>>(){
+            @Override
+            public void onSuccess(ArrayList<Alert> object) {
+                alerts=object;
+                showAlertsInMap();
+            }
+
+            @Override
+            public void onError(BaseError error) {
+
+            }
+        });
+        tracker=new GPSTracker(this);
+    }
+
+    private void registerFloatingButtons() {
+        FloatingActionButton fireBtn= (FloatingActionButton)findViewById(R.id.action_fire);
+        fireBtn.setOnClickListener(this);
+
+        FloatingActionButton loggintBtn= (FloatingActionButton)findViewById(R.id.action_logging);
+        loggintBtn.setOnClickListener(this);
+
+        FloatingActionButton pestBtn= (FloatingActionButton)findViewById(R.id.action_pest);
+        pestBtn.setOnClickListener(this);
     }
 
     private void showAlertsInMap() {
@@ -93,11 +105,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_report)
-        {
-            Intent intent =new Intent(getApplicationContext(),ReportIncident.class);
-            startActivity(intent);
-        }else if(id ==R.id.log_out){
+        if(id ==R.id.log_out){
             Session.getInstance().setToken("");
             Intent intent = new Intent(this,InitialActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -126,6 +134,25 @@ public class MainActivity extends ActionBarActivity
         }
         showAlertsInMap();
     }
+    @Override
+    public void onClick(View view) {
 
+        if(view.getId()==R.id.action_fire){
+            Intent intent =new Intent(getApplicationContext(),ReportIncident.class);
+            intent.putExtra("ALERT_TYPE","fire");
+            startActivity(intent);
+        }
 
+        if(view.getId()==R.id.action_logging){
+            Intent intent =new Intent(getApplicationContext(),ReportIncident.class);
+            intent.putExtra("ALERT_TYPE","logging");
+            startActivity(intent);
+        }
+
+        if(view.getId()==R.id.action_pest){
+            Intent intent =new Intent(getApplicationContext(),ReportIncident.class);
+            intent.putExtra("ALERT_TYPE","pest");
+            startActivity(intent);
+        }
+    }
 }
