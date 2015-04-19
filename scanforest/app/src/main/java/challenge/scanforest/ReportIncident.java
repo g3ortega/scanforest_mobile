@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,23 +21,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import challenge.scanforest.adapters.ImagesAdapter;
 import challenge.scanforest.api.ApiManager;
@@ -46,7 +41,6 @@ import challenge.scanforest.api.BaseError;
 import challenge.scanforest.api.callbacks.OnObjectSaved;
 import challenge.scanforest.models.Alert;
 import challenge.scanforest.models.AlertImage;
-import challenge.scanforest.models.Description;
 import challenge.scanforest.utils.GPSTracker;
 import challenge.scanforest.utils.TypeConverter;
 import retrofit.mime.TypedFile;
@@ -76,14 +70,24 @@ public class ReportIncident extends ActionBarActivity {
     Location mLocation;
     String mCurrentPhotoPath;
 
+    String [] alertTypes;
+
     private static final int CAMERA_KEY = 1;
     private static final int GALLERY_KEY = 2;
+
+    private static final String ALERT_TYPE = "ALERT_TYPE";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_incident);
+        alertTypes = getResources().getStringArray(R.array.alert_types);
+
+        String type = getIntent().getStringExtra(ALERT_TYPE);
+        if (type != null) {
+            setAlertType(type);
+        }
 
         gps = new GPSTracker(this);
 
@@ -132,7 +136,7 @@ public class ReportIncident extends ActionBarActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if(f!=null){
+                    if (f != null) {
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                         startActivityForResult(intent, CAMERA_KEY);
                     }
@@ -162,7 +166,7 @@ public class ReportIncident extends ActionBarActivity {
 
                     bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),
                             bitmapOptions);
-                    photo=file;
+                    photo = file;
                     //viewImage.setImageBitmap(bitmap);
                     Picasso.with(getApplicationContext()).load(photo).resize(200, 200).into(viewImage);
 
@@ -179,7 +183,7 @@ public class ReportIncident extends ActionBarActivity {
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
                 c.close();
-                photo=new File(picturePath);
+                photo = new File(picturePath);
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
                 Log.w("Path", "" + picturePath + "");
                 Picasso.with(getApplicationContext())
@@ -261,12 +265,17 @@ public class ReportIncident extends ActionBarActivity {
         return alert;
     }
 
-    private String getAlertType(int selectedType){
-        switch (selectedType){
-            case R.id.rb_fire: return "fire";
-            case R.id.rb_logging: return "logging";
-            case R.id.rb_pest: return "pest";
-            default: return null;
+
+    private String getAlertType(int selectedType) {
+        switch (selectedType) {
+            case R.id.rb_fire:
+                return "fire";
+            case R.id.rb_logging:
+                return "logging";
+            case R.id.rb_pest:
+                return "pest";
+            default:
+                return null;
         }
     }
 
@@ -283,11 +292,28 @@ public class ReportIncident extends ActionBarActivity {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath =image.getAbsolutePath();
+        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    private class AlertSeekerListener implements SeekBar.OnSeekBarChangeListener{
+    public void setAlertType(String alertType) {
+        if(alertType==null) return;
+
+        RadioButton radioFire =(RadioButton) findViewById(R.id.rb_fire);
+        RadioButton radioLogging =(RadioButton) findViewById(R.id.rb_logging);
+        RadioButton radioPest =(RadioButton) findViewById(R.id.rb_pest);
+        if(alertType.equals(alertTypes[0])){
+            radioFire.setChecked(true);
+        }
+        if(alertType.equals(alertTypes[1])){
+            radioLogging.setChecked(true);
+        }
+        if(alertType.equals(alertTypes[2])){
+            radioPest.setChecked(true);
+        }
+    }
+
+    private class AlertSeekerListener implements SeekBar.OnSeekBarChangeListener {
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -304,21 +330,21 @@ public class ReportIncident extends ActionBarActivity {
             changeMagnitudeIndicator(seekBar.getProgress());
         }
 
-        private void changeMagnitudeIndicator(int progress){
+        private void changeMagnitudeIndicator(int progress) {
             int indicatorColor, indicatorBackground, indicatorText;
-            if(progress < 3){
+            if (progress < 3) {
                 indicatorColor = R.color.slight_color;
                 indicatorBackground = R.color.slight__background;
                 indicatorText = R.string.slight;
-            }else if(progress < 6){
+            } else if (progress < 6) {
                 indicatorColor = R.color.moderate_color;
                 indicatorBackground = R.color.moderate_background;
                 indicatorText = R.string.moderate;
-            }else if(progress < 9){
+            } else if (progress < 9) {
                 indicatorColor = R.color.moderate_severe_color;
                 indicatorBackground = R.color.moderate_severe_background;
                 indicatorText = R.string.moderate_severe;
-            }else{
+            } else {
                 indicatorColor = R.color.severe_color;
                 indicatorBackground = R.color.severe_background;
                 indicatorText = R.string.severe;

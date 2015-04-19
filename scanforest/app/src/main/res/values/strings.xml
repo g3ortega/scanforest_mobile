@@ -59,5 +59,7 @@
     <string name="slight">Slight</string>
     <string name="moderate">Moderate</string>
     <string name="moderate_severe">Moderately Severe</string>
+    <string name="signin">Sign In</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

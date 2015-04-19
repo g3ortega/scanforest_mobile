@@ -17,11 +17,16 @@ public class Session {
         return instance;
     }
 
+
     public String getToken() {
         return token;
     }
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public boolean isUserLogged() {
+        return !instance.getToken().equals("");
     }
 }

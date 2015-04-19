@@ -47,7 +47,7 @@
                     android:layout_marginLeft="1dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/fire"/>
+                    android:text="@string/logging"/>
                 <RadioButton
                     android:id="@+id/rb_pest"
                     android:layout_width="match_parent"
