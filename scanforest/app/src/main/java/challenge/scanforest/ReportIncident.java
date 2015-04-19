@@ -21,8 +21,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +48,7 @@ import challenge.scanforest.utils.TypeConverter;
 import retrofit.mime.TypedFile;
 
 
-public class ReportIncident extends ActionBarActivity {
+public class ReportIncident extends ActionBarActivity implements GPSTracker.LocationListener {
 
     RecyclerView recyclerView;
     ArrayList<AlertImage> mAlertImages;
@@ -62,6 +64,8 @@ public class ReportIncident extends ActionBarActivity {
     ImageView viewImage;
     TextView mMagnitudeIndicator;
 
+    ProgressBar progressBar;
+    ScrollView scrollView;
 
     Alert alert;
     AlertImage alertImage;
@@ -85,12 +89,16 @@ public class ReportIncident extends ActionBarActivity {
         setContentView(R.layout.activity_report_incident);
         alertTypes = getResources().getStringArray(R.array.alert_types);
 
+        progressBar = (ProgressBar) findViewById(R.id.progress_circular);
+        scrollView =(ScrollView)findViewById(R.id.alert_container);
+
         String type = getIntent().getStringExtra(ALERT_TYPE);
         if (type != null) {
             setAlertType(type);
         }
 
         gps = new GPSTracker(this);
+        gps.setLocationListener(this);
 
         if (gps.canGetLocation()) {
             mLocation = gps.getLocation();
@@ -209,6 +217,9 @@ public class ReportIncident extends ActionBarActivity {
         if (id == R.id.action_send) {
             Alert alert = getAlert();
             if (isAlertValid(alert)) {
+
+                progressBar.setVisibility(View.VISIBLE);
+                scrollView.setVisibility(View.INVISIBLE);
                 ApiManager.alertService().SendAlert(alert, new OnObjectSaved<Alert>() {
                     @Override
                     public void onSuccess(Alert alert) {
@@ -231,6 +242,8 @@ public class ReportIncident extends ActionBarActivity {
                     @Override
                     public void onError(BaseError error) {
                         Toast.makeText(getApplicationContext(), getResources().getString(R.string.an_error_occured), Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        scrollView.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -243,11 +256,35 @@ public class ReportIncident extends ActionBarActivity {
             return false;
         } else {
             if (alert.getLatitud() == 0 && alert.getLongitud() == 0) {
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.location_not_setted), Toast.LENGTH_LONG).show();
+                validationToast(getResources().getString(R.string.location_not_setted));
                 return false;
-            } else {
-                return true;
             }
+
+            if (alert.getArea()==0) {
+                validationToast(getResources().getString(R.string.area_required));
+                return false;
+            }
+
+            if (alert.getMagnitude()== 0) {
+                validationToast(getResources().getString(R.string.magnitude_required));
+                return false;
+            }
+
+            if (alert.getType().equals("")) {
+                validationToast(getResources().getString(R.string.type_required));
+                return false;
+            }
+
+            if (alert.getDescription().equals("")) {
+                validationToast(getResources().getString(R.string.description_required));
+                return false;
+            }
+
+            if (photo==null) {
+                validationToast(getResources().getString(R.string.picture_required));
+                return false;
+            }
+            return true;
         }
     }
 
@@ -314,6 +351,11 @@ public class ReportIncident extends ActionBarActivity {
         }
     }
 
+    @Override
+    public void onLocationChange(Location loc) {
+        mLocation=loc;
+    }
+
     private class AlertSeekerListener implements SeekBar.OnSeekBarChangeListener {
 
         @Override
@@ -354,5 +396,9 @@ public class ReportIncident extends ActionBarActivity {
             mMagnitudeIndicator.setBackgroundColor(indicatorColor);
             mMagnitudeIndicator.setText(indicatorText);
         }
+    }
+
+    private void validationToast(String text){
+        Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
     }
 }

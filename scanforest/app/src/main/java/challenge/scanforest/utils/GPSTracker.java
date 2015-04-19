@@ -44,6 +44,12 @@ public class GPSTracker extends Service implements LocationListener {
         getLocation();
     }
 
+    public interface LocationListener{
+        public void onLocationChange(Location loc);
+    }
+
+    LocationListener mListener;
+
     public Location getLocation() {
         try {
             locationManager = (LocationManager) mContext
@@ -180,6 +186,9 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        if(mListener!=null){
+            mListener.onLocationChange(location);
+        }
     }
 
     @Override
@@ -197,6 +206,10 @@ public class GPSTracker extends Service implements LocationListener {
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
+    }
+
+    public void setLocationListener(LocationListener listener){
+        mListener= listener;
     }
 
 }

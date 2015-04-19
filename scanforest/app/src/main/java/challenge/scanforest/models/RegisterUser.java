@@ -65,4 +65,6 @@ public class RegisterUser extends User {
     public void setCelphone(String celphone) {
         this.celphone = celphone;
     }
+
+
 }

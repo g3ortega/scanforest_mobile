@@ -63,5 +63,16 @@
     <string name="cancel">Cancel</string>
     <string name="technician">Technician</string>
     <string name="normal">Normal</string>
+    <string name="firt_name_required">The first name is required</string>
+    <string name="last_name_required">The last name is required</string>
+    <string name="user_name_required">The email is required</string>
+    <string name="password_required">The password is required</string>
+    <string name="password_not_match">The password and the confirmation password don\'t match</string>
+    <string name="invalid_email">The email is not valid</string>
+    <string name="area_required">The area is required</string>
+    <string name="magnitude_required">The Magnitude is required</string>
+    <string name="type_required">The type of alert is required</string>
+    <string name="picture_required">A picture of the incident is required</string>
+    <string name="description_required">A description of the incident is required</string>
 
 </resources>

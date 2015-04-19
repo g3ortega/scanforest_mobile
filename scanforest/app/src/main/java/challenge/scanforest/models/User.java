@@ -1,11 +1,16 @@
 package challenge.scanforest.models;
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
+
+import challenge.scanforest.R;
 
 /**
  * Created by gerardo on 4/11/15.
  */
 public class User {
+
     @SerializedName("email")
     private String mUserName;
 

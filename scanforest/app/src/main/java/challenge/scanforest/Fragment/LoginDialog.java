@@ -31,13 +31,14 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
     EditText etPassword;
     ProgressBar progressBar;
     LinearLayout form;
-
     private User user;
 
-    public interface LoginDialogListener {
-        public void onPositiveLogin(DialogFragment dialog);
+    public static final String DISPATCH="DISPATCH";
+    private boolean mdispatch;
 
-        public void onRegisterRequest(DialogFragment dialog);
+    public interface LoginDialogListener {
+        public void onPositiveLogin(Boolean forAddingAlert);
+        public void onRegisterRequest();
     }
 
     LoginDialogListener mListener;
@@ -45,7 +46,7 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
+        mdispatch = getArguments().getBoolean(DISPATCH,false);
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.activity_signin, null);
@@ -70,8 +71,6 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_signin, container);
-
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -113,7 +112,7 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
                 public void onSuccess(String token) {
                     if (!token.equals("")) {
                         Session.getInstance().setToken(token);
-                        mListener.onPositiveLogin(LoginDialog.this);
+                            mListener.onPositiveLogin(mdispatch);
                         getDialog().dismiss();
                     } else {
                         Toast.makeText(getActivity(), getResources().getString(R.string.an_error_occured), Toast.LENGTH_LONG).show();
@@ -136,7 +135,7 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.btn_register) {
-            mListener.onRegisterRequest(this);
+            mListener.onRegisterRequest();
             getDialog().dismiss();
         }
         if (id == R.id.btn_login) {

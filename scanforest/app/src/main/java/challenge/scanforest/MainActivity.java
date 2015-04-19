@@ -14,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -29,7 +30,7 @@ import challenge.scanforest.utils.Session;
 
 
 public class MainActivity extends ActionBarActivity
-        implements OnMapReadyCallback, View.OnClickListener, LoginDialog.LoginDialogListener {
+        implements OnMapReadyCallback, View.OnClickListener, LoginDialog.LoginDialogListener, GPSTracker.LocationListener {
 
     MapFragment mapFragment;
     GoogleMap mGoogleMap;
@@ -38,6 +39,8 @@ public class MainActivity extends ActionBarActivity
 
     String selectedType = "fire";
     String alertTypes[];
+    Location myLocation;
+    MenuItem item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,8 @@ public class MainActivity extends ActionBarActivity
         alertTypes = getResources().getStringArray(R.array.alert_types);
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
 
         registerFloatingButtons();
 
@@ -63,6 +68,7 @@ public class MainActivity extends ActionBarActivity
             }
         });
         tracker = new GPSTracker(this);
+        tracker.setLocationListener(this);
     }
 
     private void registerFloatingButtons() {
@@ -81,9 +87,14 @@ public class MainActivity extends ActionBarActivity
             for (int i = 0; i < alerts.size(); i++) {
                 Alert alert = alerts.get(i);
                 LatLng alertLocation = new LatLng(alert.getLatitud(), alert.getLongitud());
-                mGoogleMap.addMarker(new MarkerOptions()
+                mGoogleMap.addCircle(new CircleOptions()
+                        .center(alertLocation)
+                        .radius(alert.getArea())
+                        .strokeColor(R.color.lightSecundary)
+                );
+                /*mGoogleMap.addMarker(new MarkerOptions()
                         .title(alert.getType())
-                        .position(alertLocation));
+                        .position(alertLocation));*/
             }
         }
     }
@@ -92,14 +103,29 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        item = menu.findItem(R.id.log_in_out);
+        if(Session.getInstance().isUserLogged()){
+            item.setTitle(getResources().getString(R.string.log_out));
+        }else{
+            item.setTitle(getResources().getString(R.string.Login));
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.log_out) {
-            Session.getInstance().setToken("");
+        if (id == R.id.log_in_out) {
+            if(Session.getInstance().isUserLogged()){
+                Session.getInstance().setToken("");
+                item.setTitle(getResources().getString(R.string.Login));
+            }else {
+                LoginDialog dialogFragment = new LoginDialog();
+                Bundle args = new Bundle();
+                args.putBoolean(LoginDialog.DISPATCH, false);
+                dialogFragment.setArguments(args);
+                dialogFragment.show(getSupportFragmentManager(), "LoginFragment");
+            }
         } else if (id == R.id.settings) {
 
         }
@@ -112,15 +138,7 @@ public class MainActivity extends ActionBarActivity
         Location location;
         if (tracker.canGetLocation()) {
             location = tracker.getLocation();
-            if (location != null) {
-                LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                map.setMyLocationEnabled(true);
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 13));
-
-                map.addMarker(new MarkerOptions()
-                        .title("I am here")
-                        .position(myPosition));
-            }
+            updateMyPosition(location);
         }
         showAlertsInMap();
     }
@@ -139,6 +157,9 @@ public class MainActivity extends ActionBarActivity
 
         if (!Session.getInstance().isUserLogged()) {
             LoginDialog dialogFragment = new LoginDialog();
+            Bundle args = new Bundle();
+            args.putBoolean(LoginDialog.DISPATCH, true);
+            dialogFragment.setArguments(args);
             dialogFragment.show(getSupportFragmentManager(), "LoginFragment");
         } else {
             showAlertForm(selectedType);
@@ -152,17 +173,20 @@ public class MainActivity extends ActionBarActivity
             String result = data.getStringExtra(RegisterActivity.REASON);
             if(result!=null && result=="SEND"){
                 showAlertForm(selectedType);
+                item.setTitle(getResources().getString(R.string.log_out));
             }
         }
     }
 
     @Override
-    public void onPositiveLogin(DialogFragment dialog) {
-        showAlertForm(selectedType);
+    public void onPositiveLogin(Boolean forAddingAlert) {
+        if(forAddingAlert)
+            showAlertForm(selectedType);
+        item.setTitle(getResources().getString(R.string.log_out));
     }
 
     @Override
-    public void onRegisterRequest(DialogFragment dialog) {
+    public void onRegisterRequest() {
         Intent intent = new Intent(this, RegisterActivity.class);
         intent.putExtra(RegisterActivity.REASON,"SEND");
         startActivityForResult(intent, RegisterActivity.SIGN_UP);
@@ -173,5 +197,23 @@ public class MainActivity extends ActionBarActivity
         Intent intent = new Intent(getApplicationContext(), ReportIncident.class);
         intent.putExtra("ALERT_TYPE", type);
         startActivity(intent);
+    }
+
+    @Override
+    public void onLocationChange(Location loc) {
+        updateMyPosition(loc);
+    }
+
+    private void updateMyPosition(Location location){
+        myLocation=location;
+        //Toast.makeText(this,"Updating Location",Toast.LENGTH_SHORT).show();
+        if(mGoogleMap!=null && myLocation!=null){
+            LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+            mGoogleMap.setMyLocationEnabled(true);
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 13));
+            mGoogleMap.addMarker(new MarkerOptions()
+                    .title("I am here")
+                    .position(myPosition));
+        }
     }
 }

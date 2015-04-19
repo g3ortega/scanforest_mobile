@@ -3,6 +3,7 @@ package challenge.scanforest;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -91,11 +92,39 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
         }
     }
 
-    private boolean isUserValid(User user) {
+    private boolean isUserValid(RegisterUser user) {
         if(user==null){
             return false;
         }else{
-            //TODO:make validations;
+            if(user.getFirstName().equals("")){
+                validationToast(getResources().getString(R.string.firt_name_required));
+                return false;
+            }
+
+            if(user.getLastName().equals("")){
+                validationToast(getResources().getString(R.string.last_name_required));
+                return false;
+            }
+
+            if(user.getmUserName().equals("")){
+                validationToast(getResources().getString(R.string.user_name_required));
+                return false;
+            }
+
+            if(user.getmPassword().equals("")){
+                validationToast(getResources().getString(R.string.password_required));
+                return false;
+            }
+
+            if(!user.getmPassword().equals(user.getmPasswordConfirmation())){
+                validationToast(getResources().getString(R.string.password_not_match));
+                return false;
+            }
+
+            if(!Patterns.EMAIL_ADDRESS.matcher(user.getmUserName()).matches()){
+                validationToast(getResources().getString(R.string.invalid_email));
+                return false;
+            }
             return true;
         }
     }
@@ -121,5 +150,9 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
             default:
                 return null;
         }
+    }
+
+    private void validationToast(String text){
+        Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
     }
 }
