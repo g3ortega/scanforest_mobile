@@ -83,8 +83,8 @@ public class ApiManager {
     }
 
     public static String getUrl() {
-        final String url="http://192.168.0.106:3000";
-        //String url="http://scanforest.ga";
+        //final String url="http://192.168.0.106:3000";
+        String url="http://scanforest.ga";
         return url;
     }
 }

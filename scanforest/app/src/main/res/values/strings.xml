@@ -11,7 +11,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="plague">Plaga</string>
-    <string name="fire">Incendio</string>
+    <string name="fire">Fire</string>
     <string name="report_incident">ReportIncident</string>
     <string name="title_activity_initial">InitialActivity</string>
     <string name="userName">User Name</string>
@@ -53,5 +53,11 @@
     <string name="cellphone">Cellphone</string>
     <string name="title_activity_view_alert">ViewAlertActivity</string>
     <string name="location">Location</string>
+    <string name="logging">Logging</string>
+    <string name="pest">Pest</string>
+    <string name="severe">Severe</string>
+    <string name="slight">Slight</string>
+    <string name="moderate">Moderate</string>
+    <string name="moderate_severe">Moderately Severe</string>
 
 </resources>

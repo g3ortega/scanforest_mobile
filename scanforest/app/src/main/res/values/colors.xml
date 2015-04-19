@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="image_background_color">#000000</color>
+    <color name="green">#7CB856</color>
+        <color name="slight_color">#31708f</color>
+        <color name="slight__background">#d9edf7</color>
+        <color name="moderate_color">#fcf8e3</color>
+        <color name="moderate_background">#fcf8e3</color>
+        <color name="moderate_severe_color">#3c763d</color>
+        <color name="moderate_severe_background">#ebccd1</color>
+        <color name="severe_color">#FFFFFF</color>
+        <color name="severe_background">#D84D4D</color>
 </resources>

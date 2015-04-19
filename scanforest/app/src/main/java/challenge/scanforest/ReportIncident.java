@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +22,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -52,17 +56,20 @@ public class ReportIncident extends ActionBarActivity {
 
     RecyclerView recyclerView;
     ArrayList<AlertImage> mAlertImages;
-    Spinner mAlertType;
+    RadioGroup mAlertType;
     ArrayAdapter<CharSequence> mAlertAdapter;
     ImagesAdapter mImageAdapter;
     Button pic;
     File photo;
 
     EditText mDescriptioin;
-    EditText mMagnitude;
+    SeekBar mMagnitude;
     EditText mArea;
     ImageView viewImage;
+    TextView mMagnitudeIndicator;
 
+
+    Alert alert;
     AlertImage alertImage;
 
     GPSTracker gps;
@@ -86,10 +93,11 @@ public class ReportIncident extends ActionBarActivity {
             gps.showSettingsAlert();
         }
 
+        alert = new Alert();
         viewImage = (ImageView) findViewById(R.id.alertImage);
 
-        mAlertType = (Spinner) findViewById(R.id.alert_type);
-        pic = (Button) findViewById(R.id.picture);
+        mAlertType = (RadioGroup) findViewById(R.id.rg_alert_type);
+        pic = (Button) findViewById(R.id.btn_picture);
         pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,19 +106,13 @@ public class ReportIncident extends ActionBarActivity {
         });
 
         mDescriptioin = (EditText) findViewById(R.id.et_description);
-        mMagnitude = (EditText) findViewById(R.id.et_magnitude);
+        mMagnitude = (SeekBar) findViewById(R.id.sb_magnitud);
+        mMagnitudeIndicator = (TextView) findViewById(R.id.tv_magnitude_indicator);
         mArea = (EditText) findViewById(R.id.et_area);
 
-        //TODO: change alert type to non static.
-        mAlertAdapter = ArrayAdapter.createFromResource(this,
-                R.array.alert_types, R.layout.spiner_item);
-        mAlertType.setAdapter(mAlertAdapter);
-        /*recyclerView = (RecyclerView)findViewById(R.id.pictures);
-        mAlertImages=new ArrayList<>();
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
-        mAlertImages = new ArrayList<>();
-        mImageAdapter = new ImagesAdapter(this,mAlertImages);
-        recyclerView.setAdapter(mImageAdapter);*/
+        Picasso.with(this).load(R.mipmap.ic_launcher).resize(200, 200).into(viewImage);
+        mMagnitude.setOnSeekBarChangeListener(new AlertSeekerListener());
+
     }
 
     private void selectImage() {
@@ -245,22 +247,27 @@ public class ReportIncident extends ActionBarActivity {
     }
 
     public Alert getAlert() {
-        Alert alert = new Alert();
-        ArrayList<Description> descriptions = new ArrayList<>();
-        Description description = new Description();
-        description.setDescription(mDescriptioin.getText().toString());
-        descriptions.add(description);
-        HashMap<String, String> hash = new HashMap<>();
-        hash.put("description1", description.getDescription());
-        alert.setDescription("{description1:'" + description.getDescription() + "'}");
-        alert.setMagnitude(TypeConverter.toInt(mMagnitude.getText().toString(), 0));
+        alert.setDescription(mDescriptioin.getText().toString());
         alert.setArea(TypeConverter.toFloat(mArea.getText().toString(), 0));
-        alert.setType(mAlertAdapter.getItem(mAlertType.getSelectedItemPosition()).toString());
         if (mLocation != null) {
             alert.setLatitud(mLocation.getLatitude());
             alert.setLongitud(mLocation.getLongitude());
         }
+        int selected =
+                mAlertType.getCheckedRadioButtonId();
+        int selectedType = mAlertType.getCheckedRadioButtonId();
+        alert.setType(getAlertType(selectedType));
+
         return alert;
+    }
+
+    private String getAlertType(int selectedType){
+        switch (selectedType){
+            case R.id.rb_fire: return "fire";
+            case R.id.rb_logging: return "logging";
+            case R.id.rb_pest: return "pest";
+            default: return null;
+        }
     }
 
     private File createImageFile() throws IOException {
@@ -278,5 +285,47 @@ public class ReportIncident extends ActionBarActivity {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath =image.getAbsolutePath();
         return image;
+    }
+
+    private class AlertSeekerListener implements SeekBar.OnSeekBarChangeListener{
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            alert.setMagnitude(progress);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            changeMagnitudeIndicator(seekBar.getProgress());
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            changeMagnitudeIndicator(seekBar.getProgress());
+        }
+
+        private void changeMagnitudeIndicator(int progress){
+            int indicatorColor, indicatorBackground, indicatorText;
+            if(progress < 3){
+                indicatorColor = R.color.slight_color;
+                indicatorBackground = R.color.slight__background;
+                indicatorText = R.string.slight;
+            }else if(progress < 6){
+                indicatorColor = R.color.moderate_color;
+                indicatorBackground = R.color.moderate_background;
+                indicatorText = R.string.moderate;
+            }else if(progress < 9){
+                indicatorColor = R.color.moderate_severe_color;
+                indicatorBackground = R.color.moderate_severe_background;
+                indicatorText = R.string.moderate_severe;
+            }else{
+                indicatorColor = R.color.severe_color;
+                indicatorBackground = R.color.severe_background;
+                indicatorText = R.string.severe;
+            }
+            mMagnitudeIndicator.setTextColor(indicatorColor);
+            mMagnitudeIndicator.setBackgroundColor(indicatorColor);
+            mMagnitudeIndicator.setText(indicatorText);
+        }
     }
 }
