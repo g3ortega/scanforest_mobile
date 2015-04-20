@@ -1,15 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Scanforest</string>
     <string name="title_activity_map">Map</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_report_incident">MainActivity</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="plague">Plaga</string>
     <string name="fire">Fire</string>
     <string name="report_incident">ReportIncident</string>
@@ -39,12 +39,12 @@
         <item>Technitian</item>
         <item>Normal</item>
     </string-array>
-
     <string-array name="alert_types">
         <item>fire</item>
         <item>logging</item>
         <item>pest</item>
     </string-array>
+
     <string name="title_activity_camera">CameraActivity</string>
     <string name="image_upload_error">There was an error while uploading image</string>
     <string name="log_out">Log out</string>
@@ -74,5 +74,7 @@
     <string name="type_required">The type of alert is required</string>
     <string name="picture_required">A picture of the incident is required</string>
     <string name="description_required">A description of the incident is required</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="view_details">View Details</string>
 
 </resources>

@@ -146,7 +146,7 @@ public class RegisterActivity extends ActionBarActivity implements View.OnClickL
             case R.id.rb_technician:
                 return "technician";
             case R.id.rb_normal:
-                return "normal";
+                return "regular";
             default:
                 return null;
         }

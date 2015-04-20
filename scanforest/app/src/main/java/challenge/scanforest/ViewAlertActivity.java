@@ -25,19 +25,24 @@ import challenge.scanforest.api.AlertService;
 import challenge.scanforest.api.ApiManager;
 import challenge.scanforest.models.Alert;
 import challenge.scanforest.models.AlertImage;
+import challenge.scanforest.utils.CLog;
 
 
 public class ViewAlertActivity extends ActionBarActivity implements OnMapReadyCallback {
+
+    private static final String TAG= ViewAlertActivity.class.getSimpleName();
     ImageView mAlertImage;
     TextView mLocation, mDescription, mArea, mMagnitude;
     MapFragment mapFragment;
     GoogleMap mGoogleMap;
     Alert alert;
 
+    public static final String ALERT_IDENTIFIER="ALERT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             setContentView(R.layout.activity_view_alert_landscape);
         }else{
@@ -51,20 +56,27 @@ public class ViewAlertActivity extends ActionBarActivity implements OnMapReadyCa
         mapFragment=(com.google.android.gms.maps.MapFragment)getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        alert = new Alert();
-        alert.setDescription("BALBALBALAB");
-        alert.setCreated("2014-04-15");
-        alert.setArea(5);
-        alert.setMagnitude(5);
-        alert.setLatitud(40.5487);
-        alert.setLongitud(68.5455);
+
+        Bundle  bundle = getIntent().getExtras();
+        try {
+            alert= (Alert)bundle.get(ALERT_IDENTIFIER);
+        }catch (Exception e){
+            alert = new Alert();
+        }
+
 
         mDescription.setText(alert.getDescription());
         mArea.setText(String.valueOf(alert.getArea()));
         mMagnitude.setText(String.valueOf(alert.getMagnitude()));
-
-        Picasso.with(this).load("http://demo_files/image2.jpg")
-                .placeholder(R.mipmap.ic_launcher).into(mAlertImage);
+        try {
+            CLog.i(TAG,alert.getImage());
+            Picasso.with(this).load(ApiManager.getUrl()+alert.getImage())
+                    .resize(200,2000)
+                    .centerCrop()
+                    .placeholder(R.mipmap.ic_launcher).into(mAlertImage);
+        }catch (Exception ex){
+            ex.getStackTrace();
+        }
 
 
 //        Geocoder gcd = new Geocoder(this, Locale.getDefault());
@@ -103,7 +115,6 @@ public class ViewAlertActivity extends ActionBarActivity implements OnMapReadyCa
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(alerPosition, 13));
 
         map.addMarker(new MarkerOptions()
-                .title("I am here")
                 .position(alerPosition));
     }
 }

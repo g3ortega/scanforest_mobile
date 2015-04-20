@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -25,17 +27,23 @@ import challenge.scanforest.api.ApiManager;
 import challenge.scanforest.api.BaseError;
 import challenge.scanforest.api.callbacks.OnObjectSaved;
 import challenge.scanforest.models.Alert;
+import challenge.scanforest.utils.CLog;
 import challenge.scanforest.utils.GPSTracker;
 import challenge.scanforest.utils.Session;
 
 
 public class MainActivity extends ActionBarActivity
-        implements OnMapReadyCallback, View.OnClickListener, LoginDialog.LoginDialogListener, GPSTracker.LocationListener {
+        implements OnMapReadyCallback,
+        View.OnClickListener, LoginDialog.LoginDialogListener,
+        GPSTracker.LocationListener,GoogleMap.OnInfoWindowClickListener {
+
+    private static final String TAG= MainActivity.class.getSimpleName();
 
     MapFragment mapFragment;
     GoogleMap mGoogleMap;
     GPSTracker tracker;
     ArrayList<Alert> alerts;
+    Marker mMarker;
 
     String selectedType = "fire";
     String alertTypes[];
@@ -88,13 +96,15 @@ public class MainActivity extends ActionBarActivity
                 Alert alert = alerts.get(i);
                 LatLng alertLocation = new LatLng(alert.getLatitud(), alert.getLongitud());
                 mGoogleMap.addCircle(new CircleOptions()
-                        .center(alertLocation)
-                        .radius(alert.getArea())
-                        .strokeColor(R.color.lightSecundary)
+                                .center(alertLocation)
+                                .radius(alert.getArea())
+                                .strokeColor(getResources().getColor(R.color.secundaryColor))
+                                .fillColor(getResources().getColor(R.color.lightSecundary))
                 );
-                /*mGoogleMap.addMarker(new MarkerOptions()
-                        .title(alert.getType())
-                        .position(alertLocation));*/
+                mGoogleMap.addMarker(new MarkerOptions()
+                                .title(getResources().getString(R.string.view_details))
+                                .position(alertLocation)
+                );
             }
         }
     }
@@ -135,6 +145,10 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onMapReady(GoogleMap map) {
         mGoogleMap = map;
+        mGoogleMap.getUiSettings().setCompassEnabled(true);
+        mGoogleMap.getUiSettings().setIndoorLevelPickerEnabled(true);
+        mGoogleMap.getUiSettings().setZoomGesturesEnabled(true);
+        mGoogleMap.setOnInfoWindowClickListener(this);
         Location location;
         if (tracker.canGetLocation()) {
             location = tracker.getLocation();
@@ -211,9 +225,43 @@ public class MainActivity extends ActionBarActivity
             LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mGoogleMap.setMyLocationEnabled(true);
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 13));
-            mGoogleMap.addMarker(new MarkerOptions()
+            if(mMarker==null){
+            mMarker = mGoogleMap.addMarker(new MarkerOptions()
                     .title("I am here")
                     .position(myPosition));
+            }else {
+                mMarker.setPosition(myPosition);
+            }
+        }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Alert alert = getAlertByPosition(marker.getPosition());
+        showDetails(alert);
+    }
+
+    private Alert getAlertByPosition(LatLng position) {
+        if(alerts==null)return null ;
+        for(int i=0;i<alerts.size();i++){
+            Alert alert = alerts.get(i);
+            LatLng alertLocation = new LatLng(alert.getLatitud(), alert.getLongitud());
+            if(alertLocation.latitude-position.latitude==0.0 && alertLocation.longitude-position.longitude==0.0){
+                CLog.i(TAG,"Alert Found!");
+                return alert;
+            }
+        }
+        return null;
+    }
+
+    public void showDetails(Alert alert)
+    {
+        if(alert!=null){
+            Intent intent = new Intent(this,ViewAlertActivity.class);
+            Bundle bundle =new Bundle();
+            bundle.putParcelable(ViewAlertActivity.ALERT_IDENTIFIER, alert);
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     }
 }

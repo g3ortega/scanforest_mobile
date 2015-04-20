@@ -131,24 +131,24 @@
                     android:id="@+id/rg_role"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="0.7"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
-                    <RadioButton
-                        android:id="@+id/rb_technician"
-                        android:layout_width="0dp"
-                        android:layout_weight="0.5"
-                        android:layout_height="wrap_content"
-                        android:text="@string/technician"
-                        />
+                    android:orientation="horizontal">
+
                     <RadioButton
                         android:id="@+id/rb_normal"
                         android:layout_width="0dp"
-                        android:layout_weight="0.5"
                         android:layout_height="wrap_content"
-                        android:text="@string/normal"
-                        />
-                    </RadioGroup>
+                        android:layout_weight="0.5"
+                        android:text="@string/normal" />
+
+                    <RadioButton
+                        android:id="@+id/rb_technician"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="@string/technician" />
+                </RadioGroup>
             </LinearLayout>
 
 

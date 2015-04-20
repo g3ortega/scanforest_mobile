@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="required_user_login" type="id">The user Name and password are required</item>
+    <item name="view_details" type="id">View Details</item>
 </resources>
